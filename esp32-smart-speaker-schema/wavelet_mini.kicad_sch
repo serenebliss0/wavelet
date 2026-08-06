@@ -5,7 +5,7 @@
 	(uuid "0c3772f6-de72-4c77-9f16-5e9ca2dd1615")
 	(paper "A4")
 	(title_block
-		(title "Wavelet Speaker")
+		(title "Wavelet Mini")
 		(date "2026-03-12")
 		(rev "1.0.0")
 		(company "Semire Designs")
@@ -1620,6 +1620,18 @@
 		(color 0 0 0 0)
 		(uuid "1f80fc2c-99ad-4891-b7c2-1cb3e746f4ed")
 	)
+	(no_connect
+		(at 83.82 90.17)
+		(uuid "14fbec9b-d259-4330-ad49-c69b6bc6ebde")
+	)
+	(no_connect
+		(at 78.74 90.17)
+		(uuid "7ac12b9a-8cb8-49b8-b071-7bf408a51dfa")
+	)
+	(no_connect
+		(at 86.36 90.17)
+		(uuid "a0e6370c-3f7f-4774-a260-b976c6b9261f")
+	)
 	(wire
 		(pts
 			(xy 134.62 97.79) (xy 140.97 97.79)
@@ -1900,7 +1912,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "0106ca2b-cb1c-466c-a292-94e17846cad8")
-		(property "Reference" "VOL_BTN-?"
+		(property "Reference" "VOL_BTN-1"
 			(at 166.37 52.07 0)
 			(effects
 				(font
@@ -1952,7 +1964,7 @@
 		(instances
 			(project "wavelet_mini"
 				(path "/0c3772f6-de72-4c77-9f16-5e9ca2dd1615"
-					(reference "VOL_BTN-")
+					(reference "VOL_BTN-1")
 					(unit 1)
 				)
 			)
@@ -1974,7 +1986,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "04691883-c9cb-4ef4-807f-d6b2e29e2cdf")
-		(property "Reference" "PWR_BTN?"
+		(property "Reference" "PWR_BTN1"
 			(at 109.22 52.07 0)
 			(effects
 				(font
@@ -2026,7 +2038,7 @@
 		(instances
 			(project ""
 				(path "/0c3772f6-de72-4c77-9f16-5e9ca2dd1615"
-					(reference "PWR_BTN")
+					(reference "PWR_BTN1")
 					(unit 1)
 				)
 			)
@@ -2048,7 +2060,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "1e1d64d1-aeaa-4cd6-b08c-11312030243c")
-		(property "Reference" "BT?"
+		(property "Reference" "BT1"
 			(at 67.8815 97.79 90)
 			(effects
 				(font
@@ -2149,7 +2161,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "21545a31-b07f-4479-9546-2593fd804b2a")
-		(property "Reference" "ESP32-S3 Display Module?"
+		(property "Reference" "ESP32-S3 Display Module1"
 			(at 97.79 78.8669 0)
 			(effects
 				(font
@@ -2245,7 +2257,7 @@
 		(instances
 			(project ""
 				(path "/0c3772f6-de72-4c77-9f16-5e9ca2dd1615"
-					(reference "ESP32-S3 Display Module")
+					(reference "ESP32-S3 Display Module1")
 					(unit 1)
 				)
 			)
@@ -2266,7 +2278,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "2f564626-76c2-4e04-9e07-52c0dd9a4b07")
-		(property "Reference" "LS?"
+		(property "Reference" "LS1"
 			(at 50.038 56.896 90)
 			(effects
 				(font
@@ -2342,7 +2354,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "3ec19480-a5b6-46ae-9051-132a2f3426e2")
-		(property "Reference" "R?"
+		(property "Reference" "R4"
 			(at 149.86 91.44 90)
 			(effects
 				(font
@@ -2416,7 +2428,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "462424bd-c8cd-4798-9d22-066ed8d1682e")
-		(property "Reference" "R?"
+		(property "Reference" "R1"
 			(at 130.81 88.9 90)
 			(effects
 				(font
@@ -2490,7 +2502,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "58c3a3be-8c6e-4dfa-ab85-a5df1133ae92")
-		(property "Reference" "BZ?"
+		(property "Reference" "BZ1"
 			(at 171.45 76.1999 0)
 			(effects
 				(font
@@ -2566,7 +2578,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "66653f49-4b49-4098-98ea-d833231da94b")
-		(property "Reference" "#PWR?"
+		(property "Reference" "#PWR01"
 			(at 114.3 66.04 0)
 			(effects
 				(font
@@ -2638,7 +2650,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "8428a31d-4bfb-4667-939e-b808b7dce3f3")
-		(property "Reference" "VOL_BTN+?"
+		(property "Reference" "VOL_BTN+1"
 			(at 134.62 52.07 0)
 			(effects
 				(font
@@ -2690,7 +2702,7 @@
 		(instances
 			(project "wavelet_mini"
 				(path "/0c3772f6-de72-4c77-9f16-5e9ca2dd1615"
-					(reference "VOL_BTN+")
+					(reference "VOL_BTN+1")
 					(unit 1)
 				)
 			)
@@ -2712,7 +2724,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "8c936013-5c42-4aee-8319-4ce559571a4d")
-		(property "Reference" "#PWR?"
+		(property "Reference" "#PWR02"
 			(at 85.09 62.23 0)
 			(effects
 				(font
@@ -2784,7 +2796,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "acb5787a-7b1c-4d1d-a3b9-5a8f4bf1c08a")
-		(property "Reference" "#PWR?"
+		(property "Reference" "#PWR05"
 			(at 160.02 104.14 0)
 			(effects
 				(font
@@ -2856,7 +2868,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "bb2e3e3a-bc1a-4ff2-9cbb-f4b33cfadc12")
-		(property "Reference" "C?"
+		(property "Reference" "C1"
 			(at 85.09 36.8299 0)
 			(effects
 				(font
@@ -2932,7 +2944,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "bf4dd5f3-534f-41f2-a06d-e8ce0efc2bcb")
-		(property "Reference" "#PWR?"
+		(property "Reference" "#PWR07"
 			(at 81.28 96.52 0)
 			(effects
 				(font
@@ -3004,7 +3016,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "c3ac24de-ad12-48cb-8fd6-d305ce85c04d")
-		(property "Reference" "#PWR?"
+		(property "Reference" "#PWR03"
 			(at 139.7 66.04 0)
 			(effects
 				(font
@@ -3076,7 +3088,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "c86e09ee-27ec-4177-b8d8-dc49838f5c86")
-		(property "Reference" "#PWR?"
+		(property "Reference" "#PWR08"
 			(at 78.74 63.5 0)
 			(effects
 				(font
@@ -3148,7 +3160,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "e0289cdf-a52b-439f-b262-80b6e69e0125")
-		(property "Reference" "#PWR?"
+		(property "Reference" "#PWR06"
 			(at 165.1 86.36 0)
 			(effects
 				(font
@@ -3220,7 +3232,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "e18a0903-4c22-482c-a238-45fdc8d31f70")
-		(property "Reference" "#PWR?"
+		(property "Reference" "#PWR09"
 			(at 81.28 48.26 0)
 			(effects
 				(font
@@ -3292,7 +3304,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "ec6f872a-3287-43e9-b8c0-ff3469a36452")
-		(property "Reference" "#PWR?"
+		(property "Reference" "#PWR04"
 			(at 171.45 66.04 0)
 			(effects
 				(font

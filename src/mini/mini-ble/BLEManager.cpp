@@ -150,7 +150,7 @@ class DeviceNameCallback : public BLECharacteristicCallbacks {
 void initBLE(String deviceModel, String deviceColor) {
     String advertisingName = "WVL-" + deviceModel;
     BLEDevice::init(advertisingName.c_str());
-    BLEDevice::setPower(ESP_PWR_LVL_P7);
+    BLEDevice::setPower(ESP_PWR_LVL_P9);
 
     pServer = BLEDevice::createServer();
     pServer->setCallbacks(new ServerCallbacks());
