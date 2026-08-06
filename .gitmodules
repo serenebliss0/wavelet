@@ -1,0 +1,3 @@
+[submodule "wavelet_app"]
+	path = wavelet_app
+	url = https://github.com/serenebliss0/wavelet-app.git
