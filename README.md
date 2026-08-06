@@ -30,6 +30,8 @@
 
 The system transitions away from legacy web-based dashboards toward an ecosystem focused on local embedded UI rendering (LVGL), low-energy provisioning, and companion app controls.
 
+Looking for the wavelet app? [Click here](https://github.com/serenebliss0/wavelet-app)
+
 ---
 
 ## The Wavelet Family
