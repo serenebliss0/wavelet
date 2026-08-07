@@ -1,10 +1,26 @@
 
 <p align="center">
+<<<<<<< HEAD
   <img  src="https://github.com/user-attachments/assets/ed79e45b-1031-42fb-a0aa-3ef0ca24f411" width="40%">
 </p>
 
 <p align="center">
   <b>A modular, open-source smart speaker platform built around the ESP32 ecosystem.</b>
+=======
+  <a href="https://github.com/serenebliss0/wavelet">
+    <img
+      width="139"
+      height="48"
+      alt="Wavelet Logo"
+      src="https://github.com/user-attachments/assets/ed79e45b-1031-42fb-a0aa-3ef0ca24f411"
+    />
+  </a>
+</p>
+
+
+<p align="center">
+  <b>A modular, open-source smart speaker framework built on the ESP32 platform.</b>
+>>>>>>> 5d0a87c166ad9ba075c6d13651857da4863a6f5e
 </p>
 
 <p align="center">
@@ -18,15 +34,24 @@
 
 ## Overview
 
+<<<<<<< HEAD
 Wavelet is a family of ESP32-based smart speakers built from a single shared codebase.
 
 Each model targets a different use case, from a compact BLE-enabled desktop speaker to a future high-power smart speaker, while sharing the same firmware architecture through PlatformIO environments and compile-time feature flags.
 
 The project is currently undergoing a major rewrite focused on modular firmware, modern embedded UI with LVGL and EEZ Studio, BLE onboarding, and a Flutter companion application.
+=======
+**Wavelet** is a unified embedded software platform for a family of modular smart speakers. Built on Espressif hardware, the project uses a single scalable codebase configured via compile-time environment flags in PlatformIO. 
+
+The system transitions away from legacy web-based dashboards toward an ecosystem focused on local embedded UI rendering (LVGL), low-energy provisioning, and companion app controls.
+
+Looking for the wavelet app? [Click here](https://github.com/serenebliss0/wavelet-app)
+>>>>>>> 5d0a87c166ad9ba075c6d13651857da4863a6f5e
 
 ---
 
 ## The Wavelet Family
+<<<<<<< HEAD
 
 | Model | Target | Current Status |
 | ------ | ------ | -------------- |
@@ -262,7 +287,84 @@ MIT License
 Made with ❤️ by **Semire Ajayi**
 
 ## Figma Designs
+=======
 
-[Figma Designs](https://www.figma.com/design/wSVdh18lgMXjiUBImJqQXe/Wavelet-Mini--Max-UI-Design?node-id=23-192&t=HQhf0RkUaCa5WT77-1)
+The platform scales across three distinct hardware tiers to balance power consumption, interface complexity, and performance:
+>>>>>>> 5d0a87c166ad9ba075c6d13651857da4863a6f5e
 
-Contains all the UI iterations across every model
+### Wavelet Mini
+* **Target:** ESP32-S3 (2.8" Capacitive Touch LCD Module, 8MB OPI PSRAM, 16MB Flash)
+* **Power:** 5V USB Type-C or Single-cell Li-Ion (Onboard Charging IC)
+* **Audio:** Onboard Speaker Interface (Mono Local Playback / Notifications)
+* **Focus:** Active development baseline. Features BLE QR-code onboarding, localized LVGL graphical rendering, and companion app interaction over Bluetooth Low Energy.
+
+### Wavelet Regular
+* **Target:** ESP32-WROOM-32 (Standard DevKit V1)
+* **Power:** Portable 18650 Battery Array with TP4056 Protection
+* **Audio:** Dual MAX98357A I2S DACs driving a 2.0 Stereo Array
+* **Focus:** Traditional untethered Bluetooth audio endpoint. Currently undergoing firmware restructuring to align with the new modular architecture.
+
+### Wavelet Max
+* **Target:** ESP32-S3-DevKitC-1
+* **Power:** 12V–24V DC High-Power Wall Adapter with Buck Regulation
+* **Audio:** MAX98357A I2S Pre-amp feeding a TPA3116D2 Class-D 2.1 Amplifier (6.5" Subwoofer + Satellites)
+* **Focus:** Flagship wall-powered ecosystem node focused on smart-home connectivity, advanced DSP processing, and cloud services.
+
+---
+
+## Gallery
+
+### Wavelet Mini UI
+<p align="center">
+  <img width="30%" alt="boot screen" src="https://github.com/user-attachments/assets/25db4aef-0ce7-4a9a-a229-9b8a0905d9f4" />
+  <img width="30%" alt="QR Setup page" src="https://github.com/user-attachments/assets/b6c6f377-4a82-4b27-9e4d-9c225221fe4f" />
+  <img width="30%" alt="Onboarding Tutorial: Swipe down" src="https://github.com/user-attachments/assets/28eacc10-51db-4452-9a65-d3c1d1361b0d" />
+
+</p>
+
+---
+
+## Project Status
+
+| Feature | Wavelet Mini | Wavelet Regular | Wavelet Max |
+| :--- | :---: | :---: | :---: |
+| **BLE QR Onboarding** | Completed | In Progress | Planned |
+| **LVGL / EEZ UI Engine** | Completed | Planned | Planned |
+| **Companion App Link** | In Progress | In Progress | Planned |
+| **Physical Controls** | In Progress | In Progress | Planned |
+| **Battery Fuel Gauge** | In Progress | Completed | N/A |
+| **Spotify API Integration** | In Progress | Planned | Planned |
+| **Classic Bluetooth Audio** | N/A (BLE Only) | In Progress | N/A |
+| **Wi-Fi Provisioning** | In Progress | N/A | Planned |
+| **OTA Updates** | Planned | Planned | Planned |
+
+---
+
+
+
+## Repository Structure
+
+```text
+esp32-smart-speaker/
+├── assets/                       Display graphics and branding assets
+├── data/                         Embedded filesystem assets (LVGL image resources)
+├── esp32-smart-speaker-schema/   KiCad hardware schematics and PCB designs
+├── include/                      Shared core headers and global pin configurations
+├── lib/                          Local project dependencies and external drivers
+├── src/                          Firmware source code
+│   ├── audio/                    I2S audio pipeline and playback drivers
+│   ├── battery/                  ADC fuel gauge monitoring
+│   ├── ble/                      NimBLE stack and custom GATT services
+│   ├── core/                     System orchestration and event loops
+│   ├── display/                  LVGL configuration and display drivers
+│   ├── input/                    Potentiometer and tactile button handlers
+│   ├── mini/                     Wavelet Mini specific entry points and QR setup
+│   ├── neopixel/                 Status LED ring controllers
+│   ├── rtc_manager/              Real-Time Clock state management
+│   ├── screens/                  EEZ Studio / LVGL auto-generated UI code
+│   ├── spotify_controller/       Spotify Web API client handlers
+│   ├── storage/                  Non-Volatile Storage (NVS) preferences
+│   ├── wifi/                     Async network managers
+│   └── main.cpp                  Primary setup and execution loop
+├── wavelet_app/                  Flutter companion application (Git Submodule)
+└── platformio.ini                PlatformIO environment and target definitions
