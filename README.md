@@ -1,26 +1,10 @@
 
 <p align="center">
-<<<<<<< HEAD
   <img  src="https://github.com/user-attachments/assets/ed79e45b-1031-42fb-a0aa-3ef0ca24f411" width="40%">
 </p>
 
 <p align="center">
   <b>A modular, open-source smart speaker platform built around the ESP32 ecosystem.</b>
-=======
-  <a href="https://github.com/serenebliss0/wavelet">
-    <img
-      width="139"
-      height="48"
-      alt="Wavelet Logo"
-      src="https://github.com/user-attachments/assets/ed79e45b-1031-42fb-a0aa-3ef0ca24f411"
-    />
-  </a>
-</p>
-
-
-<p align="center">
-  <b>A modular, open-source smart speaker framework built on the ESP32 platform.</b>
->>>>>>> 5d0a87c166ad9ba075c6d13651857da4863a6f5e
 </p>
 
 <p align="center">
@@ -34,24 +18,15 @@
 
 ## Overview
 
-<<<<<<< HEAD
 Wavelet is a family of ESP32-based smart speakers built from a single shared codebase.
 
 Each model targets a different use case, from a compact BLE-enabled desktop speaker to a future high-power smart speaker, while sharing the same firmware architecture through PlatformIO environments and compile-time feature flags.
 
 The project is currently undergoing a major rewrite focused on modular firmware, modern embedded UI with LVGL and EEZ Studio, BLE onboarding, and a Flutter companion application.
-=======
-**Wavelet** is a unified embedded software platform for a family of modular smart speakers. Built on Espressif hardware, the project uses a single scalable codebase configured via compile-time environment flags in PlatformIO. 
-
-The system transitions away from legacy web-based dashboards toward an ecosystem focused on local embedded UI rendering (LVGL), low-energy provisioning, and companion app controls.
-
-Looking for the wavelet app? [Click here](https://github.com/serenebliss0/wavelet-app)
->>>>>>> 5d0a87c166ad9ba075c6d13651857da4863a6f5e
 
 ---
 
 ## The Wavelet Family
-<<<<<<< HEAD
 
 | Model | Target | Current Status |
 | ------ | ------ | -------------- |
@@ -287,10 +262,6 @@ MIT License
 Made with ❤️ by **Semire Ajayi**
 
 ## Figma Designs
-=======
-
-The platform scales across three distinct hardware tiers to balance power consumption, interface complexity, and performance:
->>>>>>> 5d0a87c166ad9ba075c6d13651857da4863a6f5e
 
 ### Wavelet Mini
 * **Target:** ESP32-S3 (2.8" Capacitive Touch LCD Module, 8MB OPI PSRAM, 16MB Flash)
