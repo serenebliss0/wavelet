@@ -201,13 +201,13 @@ void tick_screen_initial_qr_page() {
     void *flowState = getFlowState(0, 1);
     (void)flowState;
     {
-        const char *new_val = evalTextProperty(flowState, 7, 3, "Failed to evaluate Text in Label widget");
-        const char *cur_val = lv_label_get_text(objects.obj6);
-        if (strcmp(new_val, cur_val) != 0) {
-            tick_value_change_obj = objects.obj6;
-            lv_label_set_text(objects.obj6, new_val);
-            tick_value_change_obj = NULL;
-        }
+        // const char *new_val = evalTextProperty(flowState, 7, 3, "Failed to evaluate Text in Label widget");
+        // const char *cur_val = lv_label_get_text(objects.obj6);
+        // if (strcmp(new_val, cur_val) != 0) {
+        //     tick_value_change_obj = objects.obj6;
+        //     lv_label_set_text(objects.obj6, new_val);
+        //     tick_value_change_obj = NULL;
+        // }
     }
 }
 

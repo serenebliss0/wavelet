@@ -179,6 +179,7 @@ void setup() {
     prefs.end();
 
     String payload = "";
+    String token = getOrCreateSetupToken();
 
     // //debug only, negate logic in prod
     if (!setupDone) {
@@ -194,12 +195,17 @@ void setup() {
     ui_init();
     create_screens();
 
+    //change the qrcode to the generated payload
     lv_qrcode_update(
       objects.obj0,
       payload.c_str(),
       payload.length()
     );
-
+    //change the manual code to the token
+    lv_label_set_text(
+        objects.obj6,
+        token.c_str()
+    );
 
     #endif
 

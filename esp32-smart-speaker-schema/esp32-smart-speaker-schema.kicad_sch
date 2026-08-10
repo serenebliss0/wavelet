@@ -4823,7 +4823,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Buzzer_Beeper:Buzzer_D14mm_H7mm_P10mm"
 			(at 229.235 35.56 90)
 			(effects
 				(font
@@ -4891,7 +4891,7 @@
 				)
 			)
 		)
-		(property "Footprint" "ESP32_30pin"
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x15_P2.54mm_Vertical_SMD_Pin1Left"
 			(at 148.59 66.04 90)
 			(effects
 				(font
@@ -5109,7 +5109,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 26.67 73.66 0)
 			(effects
 				(font
@@ -5243,7 +5243,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 49.53 73.66 0)
 			(effects
 				(font
@@ -5295,7 +5295,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "2b55766f-b0aa-42e9-8c51-87107951579b")
-		(property "Reference" "DEBUG"
+		(property "Reference" "DEBUG1"
 			(at 260.0325 30.48 0)
 			(effects
 				(font
@@ -5311,7 +5311,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "LED_THT:LED_D5.0mm"
 			(at 261.62 36.83 0)
 			(effects
 				(font
@@ -5356,7 +5356,7 @@
 		(instances
 			(project ""
 				(path "/cbac8fd8-0a29-4e40-a31e-38a1d497e26c"
-					(reference "DEBUG")
+					(reference "DEBUG1")
 					(unit 1)
 				)
 			)
@@ -5719,7 +5719,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_THT:C_Disc_D16.0mm_W5.0mm_P10.00mm"
 			(at 246.0752 138.43 0)
 			(effects
 				(font
@@ -5928,7 +5928,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_DFN_QFN:TQFN-16-1EP_3x3mm_P0.5mm_EP1.23x1.23mm"
+		(property "Footprint" "Connector_PinHeader_1.00mm:PinHeader_1x07_P1.00mm_Vertical_SMD_Pin1Left"
 			(at 224.79 127 0)
 			(effects
 				(font
@@ -6042,7 +6042,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P15.24mm_Horizontal"
 			(at 252.222 40.64 90)
 			(effects
 				(font
@@ -6244,7 +6244,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P15.24mm_Horizontal"
 			(at 90.932 182.88 90)
 			(effects
 				(font
@@ -6314,7 +6314,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_THT:CP_Radial_D10.0mm_P7.50mm"
 			(at 256.2352 138.43 0)
 			(effects
 				(font
@@ -6580,7 +6580,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 93.98 73.66 0)
 			(effects
 				(font
@@ -6648,7 +6648,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Battery:BatteryHolder_Keystone_1042_1x18650"
 			(at 85.344 173.99 90)
 			(effects
 				(font
@@ -6745,7 +6745,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0414_L11.9mm_D4.5mm_P15.24mm_Horizontal"
 			(at 73.152 182.88 90)
 			(effects
 				(font
@@ -7052,7 +7052,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Button_Switch_THT:SW_PUSH_6mm"
 			(at 71.12 73.66 0)
 			(effects
 				(font
