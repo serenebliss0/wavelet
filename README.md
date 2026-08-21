@@ -65,7 +65,6 @@ Planned features include:
 - Physical controls
 - Battery operation
 - Companion app support
-- Shared UI framework with the Mini
 
 ---
 
@@ -84,15 +83,15 @@ Development has not yet started as the required hardware is still being acquired
 | Feature | Mini | Regular | Max |
 | :-- | :--: | :--: | :--: |
 | BLE Onboarding | ✓ | Planned | Planned |
-| LVGL + EEZ Studio | ✓ | Planned | Planned |
+| LVGL + EEZ Studio | ✓ | N/A | N/A |
 | Companion App Pairing | ✓ | Planned | Planned |
 | Wi-Fi Provisioning | ✓ | N/A | Planned |
 | Physical Buttons | In Progress | In Progress | Planned |
 | Battery Monitoring | In Progress | Untested | N/A |
-| Spotify API | In Progress | Planned | Planned |
+| Spotify API | In Progress | N/A | Planned |
 | Bluetooth Audio | N/A | Broken (rewrite in progress) | N/A |
 | OTA Updates | Planned | Planned | Planned |
-| Clock Faces | Planned | Planned | Planned |
+| Clock Faces | Planned | N/A | N/A |
 
 ---
 
@@ -203,7 +202,6 @@ pio run -t upload -e mini
 - [ ] Restore Bluetooth audio
 - [ ] Migrate to new architecture
 - [ ] Companion app support
-- [ ] Shared UI framework
 
 ### Wavelet Max
 
@@ -263,79 +261,5 @@ Made with ❤️ by **Semire Ajayi**
 
 ## Figma Designs
 
-### Wavelet Mini
-* **Target:** ESP32-S3 (2.8" Capacitive Touch LCD Module, 8MB OPI PSRAM, 16MB Flash)
-* **Power:** 5V USB Type-C or Single-cell Li-Ion (Onboard Charging IC)
-* **Audio:** Onboard Speaker Interface (Mono Local Playback / Notifications)
-* **Focus:** Active development baseline. Features BLE QR-code onboarding, localized LVGL graphical rendering, and companion app interaction over Bluetooth Low Energy.
-
-### Wavelet Regular
-* **Target:** ESP32-WROOM-32 (Standard DevKit V1)
-* **Power:** Portable 18650 Battery Array with TP4056 Protection
-* **Audio:** Dual MAX98357A I2S DACs driving a 2.0 Stereo Array
-* **Focus:** Traditional untethered Bluetooth audio endpoint. Currently undergoing firmware restructuring to align with the new modular architecture.
-
-### Wavelet Max
-* **Target:** ESP32-S3-DevKitC-1
-* **Power:** 12V–24V DC High-Power Wall Adapter with Buck Regulation
-* **Audio:** MAX98357A I2S Pre-amp feeding a TPA3116D2 Class-D 2.1 Amplifier (6.5" Subwoofer + Satellites)
-* **Focus:** Flagship wall-powered ecosystem node focused on smart-home connectivity, advanced DSP processing, and cloud services.
 
 ---
-
-## Gallery
-
-### Wavelet Mini UI
-<p align="center">
-  <img width="30%" alt="boot screen" src="https://github.com/user-attachments/assets/25db4aef-0ce7-4a9a-a229-9b8a0905d9f4" />
-  <img width="30%" alt="QR Setup page" src="https://github.com/user-attachments/assets/b6c6f377-4a82-4b27-9e4d-9c225221fe4f" />
-  <img width="30%" alt="Onboarding Tutorial: Swipe down" src="https://github.com/user-attachments/assets/28eacc10-51db-4452-9a65-d3c1d1361b0d" />
-
-</p>
-
----
-
-## Project Status
-
-| Feature | Wavelet Mini | Wavelet Regular | Wavelet Max |
-| :--- | :---: | :---: | :---: |
-| **BLE QR Onboarding** | Completed | In Progress | Planned |
-| **LVGL / EEZ UI Engine** | Completed | Planned | Planned |
-| **Companion App Link** | In Progress | In Progress | Planned |
-| **Physical Controls** | In Progress | In Progress | Planned |
-| **Battery Fuel Gauge** | In Progress | Completed | N/A |
-| **Spotify API Integration** | In Progress | Planned | Planned |
-| **Classic Bluetooth Audio** | N/A (BLE Only) | In Progress | N/A |
-| **Wi-Fi Provisioning** | In Progress | N/A | Planned |
-| **OTA Updates** | Planned | Planned | Planned |
-
----
-
-
-
-## Repository Structure
-
-```text
-esp32-smart-speaker/
-├── assets/                       Display graphics and branding assets
-├── data/                         Embedded filesystem assets (LVGL image resources)
-├── esp32-smart-speaker-schema/   KiCad hardware schematics and PCB designs
-├── include/                      Shared core headers and global pin configurations
-├── lib/                          Local project dependencies and external drivers
-├── src/                          Firmware source code
-│   ├── audio/                    I2S audio pipeline and playback drivers
-│   ├── battery/                  ADC fuel gauge monitoring
-│   ├── ble/                      NimBLE stack and custom GATT services
-│   ├── core/                     System orchestration and event loops
-│   ├── display/                  LVGL configuration and display drivers
-│   ├── input/                    Potentiometer and tactile button handlers
-│   ├── mini/                     Wavelet Mini specific entry points and QR setup
-│   ├── neopixel/                 Status LED ring controllers
-│   ├── rtc_manager/              Real-Time Clock state management
-│   ├── screens/                  EEZ Studio / LVGL auto-generated UI code
-│   ├── spotify_controller/       Spotify Web API client handlers
-│   ├── storage/                  Non-Volatile Storage (NVS) preferences
-│   ├── wifi/                     Async network managers
-│   └── main.cpp                  Primary setup and execution loop
-├── wavelet_app/                  Flutter companion application (Git Submodule)
-└── platformio.ini                PlatformIO environment and target definitions
