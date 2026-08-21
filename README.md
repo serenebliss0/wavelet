@@ -85,8 +85,8 @@ Development has not yet started as the required hardware is still being acquired
 | :-- | :--: | :--: | :--: |
 | BLE Onboarding | ✓ | Planned | Planned |
 | LVGL + EEZ Studio | ✓ | Planned | Planned |
-| Companion App Pairing | In Progress | Planned | Planned |
-| Wi-Fi Provisioning | In Progress | N/A | Planned |
+| Companion App Pairing | ✓ | Planned | Planned |
+| Wi-Fi Provisioning | ✓ | N/A | Planned |
 | Physical Buttons | In Progress | In Progress | Planned |
 | Battery Monitoring | In Progress | Untested | N/A |
 | Spotify API | In Progress | Planned | Planned |
