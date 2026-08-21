@@ -60,6 +60,7 @@
 #include "mini/wavelet-mini-screens/src/ui/screens.h"
 #include "mini/wavelet-mini-screens/src/ui/ui.h"
 #include <TFT_eSPI.h>
+#include "mini/setup_helper.h"
 #include "mini/display/touch.h"   // wherever you land the FT6336 touch code
 #endif
 
@@ -67,10 +68,12 @@
 Preferences prefs;
 
 //Setting up display for MINI
+#ifdef WAVELET_MINI
 static const uint16_t screenWidth  = 320;
 static const uint16_t screenHeight = 240;
 static lv_disp_draw_buf_t disp_buf;
 static lv_color_t buf[screenWidth * 30];
+#endif
 
 #ifdef WAVELET_MINI
 TFT_eSPI my_lcd = TFT_eSPI();
@@ -94,13 +97,18 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
 }
 #endif
 
+// #ifdef WAVELET_MINI
+// extern bool wifiConnectionRequested;
+// void startWifiConnection();
+// void processWifiConnection();
+// #endif
+
 
 #ifdef WAVELET_REGULAR
 #include "Config.h"
 AudioManager audio(prefs);
 BluetoothA2DPSink a2dp_sink;
 #endif
-#include "mini/setup_helper.h"
 
 // comment this line to disable debug
 #define DEBUG
@@ -149,7 +157,7 @@ void setup() {
     #ifdef WAVELET_MINI
     
     my_lcd.init();
-    my_lcd.fillScreen(0xFFFF);
+    my_lcd.fillScreen(0x0000);
     my_lcd.setRotation(1);
     
     touch_init(my_lcd.width(), my_lcd.height(), my_lcd.getRotation());
@@ -207,7 +215,11 @@ void setup() {
         token.c_str()
     );
 
-    #endif
+    SDManager::begin();
+
+
+
+    #endif //end of mini setup
 
     #ifdef DEBUG
     String mac_addr = WiFi.macAddress();
@@ -260,11 +272,20 @@ void setup() {
 
 void loop() {
 
-  #ifdef WAVELET_MINI
-  lv_timer_handler();
-  ui_tick();
-  #endif
+    //mini
+    #ifdef WAVELET_MINI
+    //LVGL events
+    lv_timer_handler();
+    ui_tick();
 
+    //Neopixel LED handler
+    ledUpdate();
+
+    //WiFi
+    processBleSetup();
+    #endif
+
+    
   // String serial_input_args = Serial.readStringUntil('\n');
   // serial_input_args.trim(); // remove newline
   // audio.updateVolume();
@@ -275,9 +296,6 @@ void loop() {
   Serial.println(battery_level);
   #endif
   update_battery();
-  #endif
-
-  #ifdef WAVELET_REGULAR
   checkModeButton();
   handlePowerButton();
   handlePreviousButton();

@@ -59,3 +59,5 @@ void attemptWifiConnection();
 void saveWifiCredentials(String ssid, String pass);
 void saveDeviceName(String name);
 void saveSetupComplete();
+
+void processBleSetup();
