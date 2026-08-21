@@ -191,8 +191,8 @@ pio run -t upload -e mini
 - [x] QR BLE onboarding
 - [x] LVGL integration
 - [x] EEZ Studio integration
-- [ ] Companion app pairing
-- [ ] Wi-Fi provisioning
+- [x] Companion app pairing
+- [x] Wi-Fi provisioning
 - [ ] Clock faces
 - [ ] Spotify interface
 - [ ] Battery management
