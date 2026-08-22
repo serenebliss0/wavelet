@@ -46,7 +46,7 @@
 #endif
 
 #ifdef WAVELET_MINI
-#include "spotify_controller/Spotify.h"
+// #include "spotify_controller/Spotify.h"
 #include "mini/qr_setup.h"
 #include "mini/battery/battery.h"
 #include "mini/MiniConfig.h"
@@ -217,6 +217,8 @@ void setup() {
 
     SDManager::begin();
 
+    // initializeSpotify();
+
 
 
     #endif //end of mini setup
@@ -283,9 +285,12 @@ void loop() {
 
     //WiFi
     processBleSetup();
+
+    //Spotify
+    // updateSpotify();
     #endif
 
-    
+
   // String serial_input_args = Serial.readStringUntil('\n');
   // serial_input_args.trim(); // remove newline
   // audio.updateVolume();
