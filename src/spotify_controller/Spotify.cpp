@@ -4,9 +4,9 @@
 // Spotify credentials
 // ─────────────────────────────────────────────────────────────────────────────
 
-const char* CLIENT_ID = "09f8277699b4417d94cdf4fe020f7c8d";
-const char* CLIENT_SECRET = "1cee995cd6324b188532d3c429cf4594";
-const char* REFRESH_TOKEN = "AQClrI3ajkedk7YEkECvEe0ZW0Yvg8FQZlELtn8_BOpHdKIQtkWN4tf46-Mo2okZ0o7Zr6GdF_NzM2e3XhZhZBgnTXjhzlCewXAq7uUG3DySV1kmSKjopOYmoxlp9G8qeSg";
+const char* CLIENT_ID = "";
+const char* CLIENT_SECRET = "";
+const char* REFRESH_TOKEN = "";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Spotify instance
