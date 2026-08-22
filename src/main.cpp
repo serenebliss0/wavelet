@@ -46,7 +46,7 @@
 #endif
 
 #ifdef WAVELET_MINI
-// #include "spotify_controller/Spotify.h"
+#include "spotify_controller/Spotify.h"
 #include "mini/qr_setup.h"
 #include "mini/battery/battery.h"
 #include "mini/MiniConfig.h"
@@ -217,7 +217,7 @@ void setup() {
 
     SDManager::begin();
 
-    // initializeSpotify();
+    initializeSpotify();
 
 
 
@@ -287,7 +287,7 @@ void loop() {
     processBleSetup();
 
     //Spotify
-    // updateSpotify();
+    updateSpotify();
     #endif
 
 
