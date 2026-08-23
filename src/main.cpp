@@ -97,28 +97,6 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
 }
 #endif
 
-// #ifdef WAVELET_MINI
-// void syncTimeWithNTP() {
-//     Serial.println("[TIME] Waiting for NTP sync...");
-//     configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-
-//     time_t now = time(nullptr);
-//     unsigned long startMs = millis();
-//     const unsigned long NTP_TIMEOUT_MS = 10000; // give up after 10s so we don't hang forever
-
-//     while (now < 100000 && (millis() - startMs) < NTP_TIMEOUT_MS) {
-//         delay(200);
-//         now = time(nullptr);
-//     }
-
-//     if (now < 100000) {
-//         Serial.println("[TIME] NTP sync failed or timed out — SSL calls may fail");
-//     } else {
-//         Serial.println("[TIME] Synced!");
-//     }
-// }
-// #endif
-
 
 #ifdef WAVELET_REGULAR
 #include "Config.h"
@@ -209,6 +187,7 @@ void setup() {
     // //debug only, negate logic in prod
     if (!setupDone) {
         //showSetupQR("WVL-2A4F9C", "strawberry_pink", lv_scr_act());
+        //Change later
         beginSetupMode("mini", "strawberry_pink");
         payload = getSetupPayload();
         #ifdef DEBUG
@@ -216,7 +195,6 @@ void setup() {
         #endif
     }
 
-    
     ui_init();
     create_screens();
 
@@ -245,12 +223,6 @@ void setup() {
             authenticateSpotify();
         }
     }
-    // If no stored creds, beginSetupMode() already ran earlier via the
-    // !setupDone check — BLE pairing flow owns WiFi + Spotify auth from there.
-
-    // initializeSpotify(); //this broke almost everything before : )
-    // initializeSpotify();
-    // authenticateSpotify();  // blocking — waits until Spotify auth completes
 
     #endif //end of mini setup
 
