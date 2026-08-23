@@ -15,6 +15,20 @@
 Thumbs.db
 
 # ---------------------------
+# Secrets / local credentials
+# ---------------------------
+.env
+.env.*
+!.env.example
+*.secret
+*.secrets
+secrets.*
+credentials.*
+*.pem
+*.p12
+*.pfx
+
+# ---------------------------
 # VS Code
 # ---------------------------
 .vscode/
