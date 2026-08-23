@@ -125,6 +125,7 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
 AudioManager audio(prefs);
 BluetoothA2DPSink a2dp_sink;
 #endif
+#include "mini/network/WifiManager.h"
 
 // comment this line to disable debug
 #define DEBUG
@@ -233,9 +234,23 @@ void setup() {
 
     SDManager::begin();
 
+    if (hasStoredWifiCredentials()) {
+        beginWifiManager();
+        while (!isWifiManagerDone()) {
+            processWifiManager();
+            delay(10);
+        }
+        if (WiFi.status() == WL_CONNECTED) {
+            initializeSpotify();
+            authenticateSpotify();
+        }
+    }
+    // If no stored creds, beginSetupMode() already ran earlier via the
+    // !setupDone check — BLE pairing flow owns WiFi + Spotify auth from there.
+
     // initializeSpotify(); //this broke almost everything before : )
-    initializeSpotify();
-    authenticateSpotify();  // blocking — waits until Spotify auth completes
+    // initializeSpotify();
+    // authenticateSpotify();  // blocking — waits until Spotify auth completes
 
     #endif //end of mini setup
 
