@@ -116,3 +116,5 @@ coverage/
 info.html
 
 **/Makefile
+
+Secrets.h

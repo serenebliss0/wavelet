@@ -155,3 +155,12 @@ bool SDManager::appendFile(const char* path, const String& data)
 
     return true;
 }
+
+// sd_manager.cpp — add near the other methods
+File SDManager::openForWrite(const char* path)
+{
+    if (!sdMounted)
+        return File(); // invalid/empty File, caller checks with if(!file)
+
+    return SD_MMC.open(path, FILE_WRITE);
+}

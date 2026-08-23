@@ -2,6 +2,9 @@
 
 #include <Arduino.h>
 
+#include <FS.h>
+#include <SD.h>
+
 namespace SDManager
 {
     bool begin();
@@ -21,4 +24,7 @@ namespace SDManager
     bool writeFile(const char* path, const String& data);
 
     bool appendFile(const char* path, const String& data);
+
+    // sd_manager.h — add to the public interface
+    File openForWrite(const char* path);
 }

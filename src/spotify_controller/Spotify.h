@@ -15,15 +15,14 @@ extern Spotify sp;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Hardware
+//
+// Buttons are handled by polling (see Spotify.cpp) — no interrupts, so no
+// volatile flags need to be exposed here.
 // ─────────────────────────────────────────────────────────────────────────────
 
 extern const int PLAY_BUTTON;
 extern const int PREV_BUTTON;
 extern const int NXT_BUTTON;
-
-extern volatile bool play_buttonPressed;
-extern volatile bool prev_buttonPressed;
-extern volatile bool next_buttonPressed;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Playback state

@@ -101,6 +101,27 @@ void saveSetupComplete() {
 }
 
 // ── WiFi Connection ───────────────────────────────────────────────────────────
+
+void syncTimeWithNTP() {
+    Serial.println("[TIME] Waiting for NTP sync...");
+    configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+
+    time_t now = time(nullptr);
+    unsigned long startMs = millis();
+    const unsigned long NTP_TIMEOUT_MS = 10000; // give up after 10s so we don't hang forever
+
+    while (now < 100000 && (millis() - startMs) < NTP_TIMEOUT_MS) {
+        delay(200);
+        now = time(nullptr);
+    }
+
+    if (now < 100000) {
+        Serial.println("[TIME] NTP sync failed or timed out — SSL calls may fail");
+    } else {
+        Serial.println("[TIME] Synced!");
+    }
+}
+
     void startWifiConnection() {
 
         if (receivedSSID.isEmpty()) {
@@ -162,6 +183,8 @@ void saveSetupComplete() {
             wifiConnectionInProgress = false;
     
             setStatus("WIFI_CONNECTED");
+            //Sync time
+            syncTimeWithNTP();
     
             return;
         }

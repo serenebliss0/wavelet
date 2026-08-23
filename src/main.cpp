@@ -46,7 +46,7 @@
 #endif
 
 #ifdef WAVELET_MINI
-// #include "spotify_controller/Spotify.h"
+#include "spotify_controller/Spotify.h"
 #include "mini/qr_setup.h"
 #include "mini/battery/battery.h"
 #include "mini/MiniConfig.h"
@@ -97,18 +97,13 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
 }
 #endif
 
-// #ifdef WAVELET_MINI
-// extern bool wifiConnectionRequested;
-// void startWifiConnection();
-// void processWifiConnection();
-// #endif
-
 
 #ifdef WAVELET_REGULAR
 #include "Config.h"
 AudioManager audio(prefs);
 BluetoothA2DPSink a2dp_sink;
 #endif
+#include "mini/network/WifiManager.h"
 
 // comment this line to disable debug
 #define DEBUG
@@ -192,6 +187,7 @@ void setup() {
     // //debug only, negate logic in prod
     if (!setupDone) {
         //showSetupQR("WVL-2A4F9C", "strawberry_pink", lv_scr_act());
+        //Change later
         beginSetupMode("mini", "strawberry_pink");
         payload = getSetupPayload();
         #ifdef DEBUG
@@ -199,7 +195,6 @@ void setup() {
         #endif
     }
 
-    
     ui_init();
     create_screens();
 
@@ -217,9 +212,17 @@ void setup() {
 
     SDManager::begin();
 
-    // initializeSpotify();
-
-
+    if (hasStoredWifiCredentials()) {
+        beginWifiManager();
+        while (!isWifiManagerDone()) {
+            processWifiManager();
+            delay(10);
+        }
+        if (WiFi.status() == WL_CONNECTED) {
+            initializeSpotify();
+            authenticateSpotify();
+        }
+    }
 
     #endif //end of mini setup
 
@@ -287,7 +290,9 @@ void loop() {
     processBleSetup();
 
     //Spotify
-    // updateSpotify();
+    if (WiFi.status() == WL_CONNECTED) {
+        updateSpotify();
+    }
     #endif
 
 
