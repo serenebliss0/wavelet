@@ -1,16 +1,10 @@
 #include "sd_manager.h"
 #include "mini/neopixel/NeoPixel.h"
 #include "logger.h"
+#include "mini/MiniConfig.h"
 
 #include <FS.h>
 #include <SD_MMC.h>
-
-#define SD_CLK 38
-#define SD_CMD 40
-#define SD_D0  39
-#define SD_D1  41
-#define SD_D2  48
-#define SD_D3  47
 
 namespace
 {
@@ -20,12 +14,12 @@ namespace
 bool SDManager::begin()
 {
     Serial.println("[SD] Initializing SD card...");
+    Logger::info("SD", "Starting SD Init");
 
     // Configure SDMMC pins exactly as specified by the manufacturer
     if (!SD_MMC.setPins(SD_CLK, SD_CMD, SD_D0, SD_D1, SD_D2, SD_D3))
     {
         Serial.println("[SD] Pin configuration failed!");
-
         Logger::info("SD", "SD pin configuration failed");
 
         ledSetState(LedState::ERROR);
@@ -33,12 +27,13 @@ bool SDManager::begin()
     }
 
     Serial.println("[SD] Pins configured");
+    Logger::info("SD", "SD Pins Configured");
+
 
     // Initialize SD card
     if (!SD_MMC.begin())
     {
         Serial.println("[SD] Failed to mount");
-
         Logger::info("SD", "SD init failed to mount");
 
         ledSetState(LedState::ERROR);
@@ -48,7 +43,6 @@ bool SDManager::begin()
     sdMounted = true;
 
     Serial.println("[SD] Mounted successfully");
-
     Logger::info("SD", "SD init successful");
 
     initializeFilesystem();
@@ -80,6 +74,7 @@ bool SDManager::mkdir(const char* path)
 bool SDManager::initializeFilesystem()
 {
     Serial.println("[SD] Initializing filesystem...");
+    Logger::info("SD", "Initializing filesystem");
 
     mkdir("/system");
     mkdir("/config");
@@ -101,7 +96,8 @@ bool SDManager::initializeFilesystem()
     mkdir("/updates");
 
     Serial.println("[SD] Filesystem initialized");
-
+    Logger::info("SD", "Filesystem initialized");
+    
     return true;
 }
 
@@ -156,7 +152,6 @@ bool SDManager::appendFile(const char* path, const String& data)
     return true;
 }
 
-// sd_manager.cpp — add near the other methods
 File SDManager::openForWrite(const char* path)
 {
     if (!sdMounted)

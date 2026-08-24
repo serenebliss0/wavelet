@@ -4,6 +4,7 @@
 #include <ArduinoJson.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include "mini/storage/logger.h"
 
 static String lastAlbumId = "";
 
@@ -48,6 +49,7 @@ static bool downloadAlbumArt(const String &url, const String &albumId) {
     File file = SDManager::openForWrite(path.c_str());
     if (!file) {
         Serial.println("[ART] Failed to open file for writing");
+        Logger::error("Art", "Failed to open file for writing");
         http.end();
         return false;
     }

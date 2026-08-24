@@ -1,26 +1,31 @@
 /*
  * Project Name: Wavelet
- * Description: A smart speaker with Bluetooth, and WiFi capabilities
+ * Description: A family of ESP32-based smart speakers built from a single shared codebase.
  * Author: Semire Ajayi
  * Date: 12-MAR-2026
  * 
  * Hardware:
- * - ESP32 DevKit V1
- * - MAX98357A I2S Amplifier
- * - 4ohm, 8-Watt Speaker 
- * - Passive Buzzer
- * - 5k-ohm Potentiometer
- * - 5x Push Buttons
+ * 
+ * (Mini)
+ * - 1x 2.8inch ESP32-S3 Display Module
+ * - 2x 18650 Lithium Batteries
+ * - 1x 4ohm, 8-Watt Speaker 
+ * - 1x Passive Buzzer
+ * - 1x Light Dependent Resistor (LDR)
+ * - 3x Push Buttons
+ * 
+ * (Regular)
+ * - 1x ESP32 DevKit V1
+ * - 1x MAX98357A I2S Amplifier
+ * - 1x 4ohm, 8-Watt Speaker 
+ * - 1x Passive Buzzer
+ * - 2x 18650 Lithium Batteries
+ * - 1x TP4056 Charging Module
+ * - 1x 5k-ohm Potentiometer
+ * - 4x Push Buttons
  * 
  * Connections:
- * - DIN (MAX98357A)-> Pin 22
- * - BCLK (MAX98357A) -> Pin 26
- * - LRCLK (MAX98357A) -> Pin 25
- * - BUTTONS 1-5 -> Pins [23, 21, 19, 18, 13]
- * - BUZZER -> Pin 27
- * - POTENTIOMETER -> Pin 34
- * - BATTERY PIN -> Pin 35
- * 
+ * (See Config.h for wavelet regular, MiniConfig for wavelet mini)
  * 
  */
 
@@ -28,7 +33,6 @@
 #include <WiFi.h>
 #include "driver/i2s.h"
 #include <Preferences.h>
-
 
 #if defined(WAVELET_REGULAR)
 #include "input/Buttons.h"
@@ -61,13 +65,15 @@
 #include "mini/wavelet-mini-screens/src/ui/ui.h"
 #include <TFT_eSPI.h>
 #include "mini/setup_helper.h"
-#include "mini/display/touch.h"   // wherever you land the FT6336 touch code
+#include "mini/display/touch.h"
+#include "mini/network/WifiManager.h"
 #endif
 
 
 Preferences prefs;
 
 //Setting up display for MINI
+// TODO: Give each model its own module and free up main.cpp
 #ifdef WAVELET_MINI
 static const uint16_t screenWidth  = 320;
 static const uint16_t screenHeight = 240;
@@ -98,12 +104,12 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
 #endif
 
 
+//Regular is quite cooked rn
 #ifdef WAVELET_REGULAR
 #include "Config.h"
 AudioManager audio(prefs);
 BluetoothA2DPSink a2dp_sink;
 #endif
-#include "mini/network/WifiManager.h"
 
 // comment this line to disable debug
 #define DEBUG
@@ -113,12 +119,6 @@ BluetoothA2DPSink a2dp_sink;
 
 #define FIRMWARE_VERSION "1.0.0"
 
-#if defined(WAVELET_REGULAR)
-#ifdef BATTERIES_CONNECTED
-#define BATTERY_PIN 35
-#endif
-#endif
-
 void setup() {
 
     #ifdef DEBUG
@@ -126,21 +126,11 @@ void setup() {
     #endif
 
     ledcSetup(0, 2000, 8);
-    // ledcAttachPin(Config::BUZZER, 0);
-
-    //esp_bt_controller_mem_release(ESP_BT_MODE_BLE);
-    /*
-    WiFi.disconnect(true);
-    WiFi.mode(WIFI_OFF);
-    delay(100);
-    */
 
     prefs.begin("app", false); // open once
 
     #if defined(WAVELET_REGULAR)
-
     pinMode(Config::BUZZER, OUTPUT);
-    
     pinMode(Config::PWR_BUTTON, INPUT_PULLUP);
     pinMode(Config::MODE_BUTTON, INPUT_PULLUP);
     pinMode(Config::PREVIOUS_BUTTON, INPUT_PULLUP);
@@ -150,9 +140,10 @@ void setup() {
 
     //wavelet mini setup proc
     #ifdef WAVELET_MINI
-    
+
+    //TODO: move to display init module
     my_lcd.init();
-    my_lcd.fillScreen(0x0000);
+    my_lcd.fillScreen(0x0000); //Black by default
     my_lcd.setRotation(1);
     
     touch_init(my_lcd.width(), my_lcd.height(), my_lcd.getRotation());
@@ -176,6 +167,13 @@ void setup() {
     indev_drv.read_cb = my_touchpad_read;
     lv_indev_drv_register(&indev_drv);
 
+    //Start LED
+    ledInit();
+
+    //Change led state to boot
+    ledSetState(LedState::BOOT);
+
+    //NVS for mini
     Preferences prefs;
     prefs.begin("wavelet", true);
     bool setupDone = prefs.getBool("setup_done", false);
@@ -186,8 +184,8 @@ void setup() {
 
     // //debug only, negate logic in prod
     if (!setupDone) {
-        //showSetupQR("WVL-2A4F9C", "strawberry_pink", lv_scr_act());
         //Change later
+        //Color picker later
         beginSetupMode("mini", "strawberry_pink");
         payload = getSetupPayload();
         #ifdef DEBUG
@@ -195,14 +193,16 @@ void setup() {
         #endif
     }
 
+
+    //init LVGL UI and create screens
     ui_init();
     create_screens();
 
     //change the qrcode to the generated payload
     lv_qrcode_update(
-      objects.obj0,
-      payload.c_str(),
-      payload.length()
+        objects.obj0,
+        payload.c_str(),
+        payload.length()
     );
     //change the manual code to the token
     lv_label_set_text(
@@ -210,8 +210,10 @@ void setup() {
         token.c_str()
     );
 
+    //Init filesystem
     SDManager::begin();
 
+    //Gate features requiring wifi
     if (hasStoredWifiCredentials()) {
         beginWifiManager();
         while (!isWifiManagerDone()) {
@@ -223,15 +225,13 @@ void setup() {
             authenticateSpotify();
         }
     }
-
     #endif //end of mini setup
+
 
     #ifdef DEBUG
     String mac_addr = WiFi.macAddress();
     Serial.println(WiFi.macAddress());
     #endif
-    
-    //esp_bt_controller_mem_release(ESP_BT_MODE_BLE);
 
     #ifdef WAVELET_REGULAR
     i2s_pin_config_t my_pins = {
@@ -244,14 +244,13 @@ void setup() {
     a2dp_sink.set_pin_config(my_pins);
     a2dp_sink.set_on_connection_state_changed(on_connected);
     a2dp_sink.set_auto_reconnect(false);
-
     #endif
 
     #ifdef WAVELET_MAX
     getSongMetadata(); //achieve song info for the web ui
     #endif
 
-    #ifdef WAVELET_REGULAR
+    #ifdef WAVELET_REGULAR //update required
     a2dp_sink.start("Wavelet");
     #endif
 
@@ -279,6 +278,7 @@ void loop() {
 
     //mini
     #ifdef WAVELET_MINI
+
     //LVGL events
     lv_timer_handler();
     ui_tick();
@@ -295,26 +295,16 @@ void loop() {
     }
     #endif
 
+#if defined(WAVELET_REGULAR)
+#ifdef DEBUG
+int battery_level = readBatteryLevel();
+Serial.println(battery_level);
+#endif
+update_battery();
+checkModeButton();
+handlePowerButton();
+handlePreviousButton();
+handleNextButton();
+#endif
 
-  // String serial_input_args = Serial.readStringUntil('\n');
-  // serial_input_args.trim(); // remove newline
-  // audio.updateVolume();
-
-  #if defined(WAVELET_REGULAR)
-  #ifdef DEBUG
-  int battery_level = readBatteryLevel();
-  Serial.println(battery_level);
-  #endif
-  update_battery();
-  checkModeButton();
-  handlePowerButton();
-  handlePreviousButton();
-  handleNextButton();
-  #endif
-  //MDNS.update();
-
-  // if (serial_input_args == "volume")
-  // {
-  //   Serial.println(String(rememberedVolume) + "%");
-  // }
 }

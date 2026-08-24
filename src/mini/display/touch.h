@@ -1,14 +1,5 @@
 #include <FT6336.h>
-
- #define TOUCH_FT6336
- #define TOUCH_FT6336_SCL 15
- #define TOUCH_FT6336_SDA 16
- #define TOUCH_FT6336_INT 17
- #define TOUCH_FT6336_RST 18
- #define TOUCH_MAP_X1 0
- #define TOUCH_MAP_X2 240
- #define TOUCH_MAP_Y1 0
- #define TOUCH_MAP_Y2 320
+#include "mini/MiniConfig.h"
 
 int touch_last_x = 0, touch_last_y = 0;
 unsigned short int width=0, height=0, rotation,min_x=0,max_x=0,min_y=0,max_y=0;

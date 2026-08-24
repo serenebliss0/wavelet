@@ -2,8 +2,6 @@
 
 #include <Arduino.h>
 
-// ── Public API ────────────────────────────────────────────────────────────────
-
 // Returns true if valid WiFi credentials exist in NVS from a previous pairing.
 bool hasStoredWifiCredentials();
 

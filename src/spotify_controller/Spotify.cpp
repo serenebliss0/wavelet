@@ -1,20 +1,11 @@
 #include "Spotify.h"
 #include <Secrets.h>
 #include "album_art.h"
+#include "mini/MiniConfig.h"
+#include "mini/storage/logger.h"
 
 
 Spotify sp(CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN);
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Buttons
-// ⚠️ PLACEHOLDER PINS — set these to confirmed free GPIOs before use.
-// initializeButtons() will refuse to run while any of these are -1, so
-// leaving them unset just skips button support instead of corrupting memory.
-// ─────────────────────────────────────────────────────────────────────────────
-
-const int PLAY_BUTTON = 2;
-const int PREV_BUTTON = 3;
-const int NXT_BUTTON  = 14;
 
 struct ButtonState {
     int pin;
@@ -22,14 +13,12 @@ struct ButtonState {
     bool debounced   = HIGH;
     unsigned long lastChangeMs = 0;
 
-    ButtonState(int p) : pin(p) {}   // <-- this line was missing
+    ButtonState(int p) : pin(p) {}   // constructor
 };
 
 static const unsigned long DEBOUNCE_MS = 30;
 
 static ButtonState playBtn { PLAY_BUTTON };
-static ButtonState prevBtn { PREV_BUTTON };
-static ButtonState nextBtn { NXT_BUTTON };
 
 static bool buttonsReady = false;
 
@@ -50,20 +39,16 @@ static bool pollButtonPressed(ButtonState &btn) {
 }
 
 static void initializeButtons() {
-    if (PLAY_BUTTON < 0 || PREV_BUTTON < 0 || NXT_BUTTON < 0) {
+    if (PLAY_BUTTON < 0 ) {
         Serial.println("[SPOTIFY] Button pins not set — skipping button init");
+        Logger::warning("Spotify", "Button pins not set — skipping button init");
         return;
     }
 
     pinMode(PLAY_BUTTON, INPUT_PULLUP);
-    pinMode(PREV_BUTTON, INPUT_PULLUP);
-    pinMode(NXT_BUTTON,  INPUT_PULLUP);
     buttonsReady = true;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Playback state / timing
-// ─────────────────────────────────────────────────────────────────────────────
 
 String lastTrack  = "";
 String lastArtist = "";
@@ -72,16 +57,16 @@ bool lastPlaying  = false;
 unsigned long lastUpdate = 0;
 const unsigned long SPOTIFY_UPDATE_INTERVAL = 5000;
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Init + auth (same flow as the dev's original)
-// ─────────────────────────────────────────────────────────────────────────────
-
+//initialization and authorization
 void initializeSpotify() {
+
     Serial.printf("[DEBUG] Free heap: %d, Largest free block: %d\n",
         ESP.getFreeHeap(), heap_caps_get_largest_free_block(MALLOC_CAP_8BIT));
+
     Serial.println("[SPOTIFY] Initializing...");
     initializeButtons();
     Serial.println("[SPOTIFY] Init complete");
+    Logger::info("Spotify", "Spotify was initialized successfully");
 }
 
 bool authenticateSpotify() {
@@ -99,9 +84,6 @@ bool authenticateSpotify() {
     return true;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Now playing
-// ─────────────────────────────────────────────────────────────────────────────
 
 void getCurrentlyPlaying() {
     JsonDocument filter;
@@ -139,13 +121,8 @@ void getCurrentlyPlaying() {
         lastTrack = track;
         lastArtist = artist;
         lastPlaying = playing;
-        // ...print block unchanged
     }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Controls
-// ─────────────────────────────────────────────────────────────────────────────
 
 void pauseCurrentlyPlaying() {
     if (sp.is_playing()) {
@@ -167,10 +144,7 @@ void playPreviousSong() {
     Serial.print("[SPOTIFY] Previous: "); Serial.println(res.status_code);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Controls — extended
-// ─────────────────────────────────────────────────────────────────────────────
-
+//Helper functions
 void playCurrentTrack() {
     response res = sp.start_a_users_playback();
     Serial.print("[SPOTIFY] Play: "); Serial.println(res.status_code);
@@ -186,8 +160,6 @@ void setPlaybackVolume(int volume_percent) {
     Serial.print("[SPOTIFY] Volume: "); Serial.println(res.status_code);
 }
 
-// ── Shuffle ──────────────────────────────────────────────────────────────────
-
 void enableShuffle() {
     response res = sp.toggle_shuffle(spotify_types::SHUFFLE_ON);
     Serial.print("[SPOTIFY] Shuffle ON: "); Serial.println(res.status_code);
@@ -198,9 +170,7 @@ void disableShuffle() {
     Serial.print("[SPOTIFY] Shuffle OFF: "); Serial.println(res.status_code);
 }
 
-// ── Repeat ───────────────────────────────────────────────────────────────────
 // Spotify's repeat modes: off / track / context (playlist or album)
-
 void setRepeatOff() {
     response res = sp.set_repeat_mode(spotify_types::REPEAT_OFF);
     Serial.print("[SPOTIFY] Repeat OFF: "); Serial.println(res.status_code);
@@ -216,22 +186,14 @@ void setRepeatContext() {
     Serial.print("[SPOTIFY] Repeat CONTEXT: "); Serial.println(res.status_code);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Button handling
-// ─────────────────────────────────────────────────────────────────────────────
-
+//Button handler
 static void handleButtons() {
     if (!buttonsReady) return;
 
     if (pollButtonPressed(playBtn))  pauseCurrentlyPlaying();
-    if (pollButtonPressed(prevBtn))  playPreviousSong();
-    if (pollButtonPressed(nextBtn))  playNextSong();
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Update — call from loop()
-// ─────────────────────────────────────────────────────────────────────────────
-
+//call this in main loop
 void updateSpotify() {
     handleButtons();
 

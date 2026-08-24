@@ -1,5 +1,10 @@
 #pragma once
 
+//Configuration file for Wavelet Regular
+
+//If you are looking for the mini's config:
+// src/mini/MiniConfig.h
+
 namespace Config {
 
     //Audio 

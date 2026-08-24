@@ -25,6 +25,6 @@ namespace SDManager
 
     bool appendFile(const char* path, const String& data);
 
-    // sd_manager.h — add to the public interface
+    // sd_manager.h add to the public interface
     File openForWrite(const char* path);
 }

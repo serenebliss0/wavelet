@@ -1,13 +1,10 @@
 #include "battery.h"
-
-#include "mini/storage/logger.h"
 #include "mini/MiniConfig.h"
 
-constexpr uint8_t BATTERY_PIN = MiniConfig::BATTERY_PIN;          // Replace with the correct analog pin
-// constexpr uint8_t CHARGE_PIN = MiniConfig::BATTERY_PIN;           // TODO
-constexpr float ADC_REFERENCE = 3.3f;
-constexpr int ADC_RESOLUTION = 4095;
-constexpr float VOLTAGE_DIVIDER = 2.0f;
+#include "mini/storage/logger.h"
+
+constexpr uint8_t BATTERY_PIN = MiniConfig::BATTERY_PIN;
+
 
 struct BatteryData
 {
@@ -32,7 +29,7 @@ bool Battery::begin()
 
     Logger::info(
         "Battery",
-        "Initialized.");
+        "Battery Manager Initialized.");
 
     return true;
 }
@@ -79,9 +76,6 @@ void Battery::update()
 
     battery.percentage =
         voltageToPercent(battery.voltage);
-
-    battery.charging =
-        // digitalRead(CHARGE_PIN);
 
     battery.full =
         battery.charging &&

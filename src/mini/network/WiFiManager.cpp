@@ -3,22 +3,18 @@
 #include <Preferences.h>
 #include "mini/storage/logger.h"
 
-// ── External helpers shared with BLEManager ─────────────────────────────────
+// External helpers shared with BLEManager
 // setStatus() and syncTimeWithNTP() are defined (non-static) in ble_manager.cpp.
 // Declared extern here rather than duplicated, since duplicating status/NTP
 // logic across two files is exactly how they'd quietly drift out of sync.
 extern void setStatus(const char* status);
 extern void syncTimeWithNTP();
 
-// ── Internal state ───────────────────────────────────────────────────────────
-
 static bool wifiConnectionInProgress = false;
 static bool wifiManagerDone = false;
 
 static unsigned long wifiConnectStartTime = 0;
 static const unsigned long WIFI_TIMEOUT = 10000; // same timeout as BLEManager, kept consistent
-
-// ── NVS ───────────────────────────────────────────────────────────────────────
 
 bool hasStoredWifiCredentials() {
     Preferences prefs;
@@ -36,7 +32,6 @@ bool hasStoredWifiCredentials() {
     return !ssid.isEmpty();
 }
 
-// ── WiFi Connection ───────────────────────────────────────────────────────────
 
 void beginWifiManager() {
 
@@ -94,7 +89,6 @@ void processWifiManager() {
 
     wl_status_t wifiStatus = WiFi.status();
 
-    // ── Connected ────────────────────────────────────────────────────────────
     if (wifiStatus == WL_CONNECTED) {
 
         Serial.printf(
@@ -112,7 +106,6 @@ void processWifiManager() {
         return;
     }
 
-    // ── Timeout ──────────────────────────────────────────────────────────────
     if (millis() - wifiConnectStartTime >= WIFI_TIMEOUT) {
 
         Serial.println("[WiFiManager] Connection timeout");

@@ -7,7 +7,7 @@
 #include <WiFi.h>
 #include "mini/storage/logger.h"
 
-// ── UUIDs ─────────────────────────────────────────────────────────────────────
+// UUIDs
 #define WAVELET_SERVICE_UUID    "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHAR_DEVICE_INFO_UUID   "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 #define CHAR_COMMAND_UUID       "beb5483e-36e1-4688-b7f5-ea07361b26a9"
@@ -16,7 +16,7 @@
 #define CHAR_STATUS_UUID        "beb5483e-36e1-4688-b7f5-ea07361b26ac"
 #define CHAR_DEVICE_NAME_UUID   "beb5483e-36e1-4688-b7f5-ea07361b26ad"
 
-// ── Globals ───────────────────────────────────────────────────────────────────
+//Global Vars
 BLEServer*         pServer     = nullptr;
 BLECharacteristic* pStatus     = nullptr;
 BLECharacteristic* pDeviceInfo = nullptr;
@@ -36,7 +36,6 @@ String receivedSSID     = "";
 String receivedPassword = "";
 String receivedName     = "";
 
-// ── Status helper ─────────────────────────────────────────────────────────────
 void setStatus(const char* status) {
     Serial.printf("[STATUS] %s\n", status);
 
@@ -49,7 +48,6 @@ void setStatus(const char* status) {
     }
 }
 
-// ── NVS ───────────────────────────────────────────────────────────────────────
 void saveWifiCredentials(const String& ssid, const String& pass) {
     Preferences prefs;
 
@@ -82,6 +80,8 @@ void saveDeviceName(const String& name) {
     prefs.end();
 
     Serial.printf("[NVS] Device name saved: %s\n", name.c_str());
+    Logger::info("NVS", "Device name saved");
+
 }
 
 void saveSetupComplete() {
@@ -98,9 +98,9 @@ void saveSetupComplete() {
     prefs.end();
 
     Serial.println("[NVS] Setup marked complete");
+    Logger::info("NVS", "The device has completed setup");
 }
 
-// ── WiFi Connection ───────────────────────────────────────────────────────────
 
 void syncTimeWithNTP() {
     Serial.println("[TIME] Waiting for NTP sync...");
@@ -117,8 +117,10 @@ void syncTimeWithNTP() {
 
     if (now < 100000) {
         Serial.println("[TIME] NTP sync failed or timed out — SSL calls may fail");
+        Logger::warning("Time", "NTP sync failed or timed out — SSL calls may fail");
     } else {
         Serial.println("[TIME] Synced!");
+        Logger::info("Time", "Time synced with NTP successfully");
     }
 }
 
@@ -167,7 +169,6 @@ void syncTimeWithNTP() {
     
         wl_status_t wifiStatus = WiFi.status();
     
-        // ── Connected ────────────────────────────────────────────────────────────
         if (wifiStatus == WL_CONNECTED) {
     
             Serial.printf(
@@ -183,18 +184,19 @@ void syncTimeWithNTP() {
             wifiConnectionInProgress = false;
     
             setStatus("WIFI_CONNECTED");
+
             //Sync time
             syncTimeWithNTP();
     
             return;
         }
     
-        // ── Timeout ──────────────────────────────────────────────────────────────
         if (millis() - wifiConnectStartTime >= WIFI_TIMEOUT) {
     
             Serial.println(
                 "[WiFi] Connection timeout"
             );
+            Logger::warning("WiFi", "WiFi Connection timed out");
     
             wifiConnectionInProgress = false;
     
@@ -207,8 +209,9 @@ void syncTimeWithNTP() {
         }
     }
 
-// ── BLE Server Callbacks ──────────────────────────────────────────────────────
-class ServerCallbacks : public BLEServerCallbacks {
+//As usual, I don't understand anything from here : )
+//Handles a bunch of BLE Callbacks
+    class ServerCallbacks : public BLEServerCallbacks {
 
     void onConnect(BLEServer* pServer) override {
 
@@ -231,7 +234,6 @@ class ServerCallbacks : public BLEServerCallbacks {
     }
 };
 
-// ── Command Callback ──────────────────────────────────────────────────────────
 class CommandCallback : public BLECharacteristicCallbacks {
 
     void onWrite(BLECharacteristic* pChar) override {
@@ -243,7 +245,7 @@ class CommandCallback : public BLECharacteristicCallbacks {
             value.c_str()
         );
 
-        // ── Begin WiFi connection ────────────────────────────────────────────
+        //Start wifi connection
         if (value == "SET_WIFI") {
 
             Serial.println(
@@ -255,7 +257,7 @@ class CommandCallback : public BLECharacteristicCallbacks {
             return;
         }
 
-        // ── Finish setup ─────────────────────────────────────────────────────
+        //finish setup
         if (value == "SETUP_COMPLETE") {
 
             if (WiFi.status() != WL_CONNECTED) {
@@ -263,6 +265,7 @@ class CommandCallback : public BLECharacteristicCallbacks {
                 Serial.println(
                     "[BLE] Cannot complete setup — WiFi not connected"
                 );
+                Logger::warning("WiFi", "[BLE] Cannot complete setup — WiFi not connected");
 
                 setStatus("WIFI_REQUIRED");
                 return;
@@ -280,7 +283,7 @@ class CommandCallback : public BLECharacteristicCallbacks {
 
             delay(500);
 
-            ESP.restart();
+            ESP.restart(); //restart device
 
             return;
         }
@@ -292,7 +295,6 @@ class CommandCallback : public BLECharacteristicCallbacks {
     }
 };
 
-// ── WiFi SSID Callback ────────────────────────────────────────────────────────
 class WifiSSIDCallback : public BLECharacteristicCallbacks {
 
     void onWrite(BLECharacteristic* pChar) override {
@@ -306,7 +308,6 @@ class WifiSSIDCallback : public BLECharacteristicCallbacks {
     }
 };
 
-// ── WiFi Password Callback ───────────────────────────────────────────────────
 class WifiPassCallback : public BLECharacteristicCallbacks {
 
     void onWrite(BLECharacteristic* pChar) override {
@@ -318,17 +319,13 @@ class WifiPassCallback : public BLECharacteristicCallbacks {
             receivedPassword.length()
         );
 
-        // IMPORTANT:
         // We do NOT connect here.
-        //
         // The Companion App must send:
         // SET_WIFI
-        //
         // after both SSID and password have been written.
     }
 };
 
-// ── Device Name Callback ─────────────────────────────────────────────────────
 class DeviceNameCallback : public BLECharacteristicCallbacks {
 
     void onWrite(BLECharacteristic* pChar) override {
@@ -344,7 +341,6 @@ class DeviceNameCallback : public BLECharacteristicCallbacks {
     }
 };
 
-// ── BLE Initialization ───────────────────────────────────────────────────────
 void initBLE(String deviceModel, String deviceColor) {
 
     String advertisingName = "WVL-" + deviceModel;
@@ -368,7 +364,6 @@ void initBLE(String deviceModel, String deviceColor) {
             WAVELET_SERVICE_UUID
         );
 
-    // ── Device Info ──────────────────────────────────────────────────────────
     pDeviceInfo =
         pService->createCharacteristic(
             CHAR_DEVICE_INFO_UUID,
@@ -386,7 +381,6 @@ void initBLE(String deviceModel, String deviceColor) {
         info.c_str()
     );
 
-    // ── Status ────────────────────────────────────────────────────────────────
     pStatus =
         pService->createCharacteristic(
             CHAR_STATUS_UUID,
@@ -402,7 +396,6 @@ void initBLE(String deviceModel, String deviceColor) {
         "IDLE"
     );
 
-    // ── Command ───────────────────────────────────────────────────────────────
     BLECharacteristic* pCommand =
         pService->createCharacteristic(
             CHAR_COMMAND_UUID,
@@ -413,7 +406,6 @@ void initBLE(String deviceModel, String deviceColor) {
         new CommandCallback()
     );
 
-    // ── WiFi SSID ─────────────────────────────────────────────────────────────
     BLECharacteristic* pWifiSSID =
         pService->createCharacteristic(
             CHAR_WIFI_SSID_UUID,
@@ -424,7 +416,6 @@ void initBLE(String deviceModel, String deviceColor) {
         new WifiSSIDCallback()
     );
 
-    // ── WiFi Password ─────────────────────────────────────────────────────────
     BLECharacteristic* pWifiPass =
         pService->createCharacteristic(
             CHAR_WIFI_PASS_UUID,
@@ -435,7 +426,6 @@ void initBLE(String deviceModel, String deviceColor) {
         new WifiPassCallback()
     );
 
-    // ── Device Name ───────────────────────────────────────────────────────────
     BLECharacteristic* pDeviceName =
         pService->createCharacteristic(
             CHAR_DEVICE_NAME_UUID,
@@ -446,10 +436,9 @@ void initBLE(String deviceModel, String deviceColor) {
         new DeviceNameCallback()
     );
 
-    // ── Start Service ─────────────────────────────────────────────────────────
+    //start service
     pService->start();
 
-    // ── Advertising ──────────────────────────────────────────────────────────
     BLEAdvertising* pAdvertising =
         BLEDevice::getAdvertising();
 
@@ -470,7 +459,7 @@ void initBLE(String deviceModel, String deviceColor) {
     );
 }
 
-// ── Setup Entry Point ─────────────────────────────────────────────────────────
+//starts setup mode
 void beginSetupMode(
     String deviceModel,
     String deviceColor
@@ -479,6 +468,7 @@ void beginSetupMode(
     Serial.println(
         "[WAVELET] First boot — entering BLE setup mode"
     );
+    Logger::info("System", "First boot — entering BLE setup mode");
 
     initBLE(
         deviceModel,
