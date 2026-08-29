@@ -110,6 +110,7 @@ void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
 AudioManager audio(prefs);
 BluetoothA2DPSink a2dp_sink;
 #endif
+#include "mini/audio/mini-audio-manager.h"
 
 // comment this line to disable debug
 #define DEBUG
@@ -182,6 +183,7 @@ void setup() {
     String payload = "";
     String token = getOrCreateSetupToken();
 
+    
     // //debug only, negate logic in prod
     if (!setupDone) {
         //Change later
@@ -212,6 +214,9 @@ void setup() {
 
     //Init filesystem
     SDManager::begin();
+
+    // AudioManager::begin(false); // false = touch already grabbed the shared I2C bus
+    // AudioManager::play("/media/boot/chime.wav");
 
     //Gate features requiring wifi
     if (hasStoredWifiCredentials()) {

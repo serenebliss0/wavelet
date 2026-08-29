@@ -1,6 +1,6 @@
-#include "mini/audio/mini-audio-manager.h"
-#include "drivers/Es8311Wire.h"
-#include "mini/storage/logger.h"
+#include "AudioManager.h"
+#include "Es8311Wire.h"
+#include "logger.h"
 #include "mini/MiniConfig.h"
 #include "mini/neopixel/NeoPixel.h"
 
@@ -21,7 +21,10 @@
 //   AUDIO_I2C_SCL      GPIO_NUM_15   (shared with touch + extended I2C)
 //   AUDIO_I2S_MCLK     GPIO_NUM_4
 //   AUDIO_I2S_BCK      GPIO_NUM_5
-//   AUDIO_I2S_DOUT     GPIO_NUM_6
+//   AUDIO_I2S_DOUT     GPIO_NUM_8    (matches manufacturer's proven demo
+//                                     NOT the raw datasheet label, which
+//                                     describes pins from the codec's point
+//                                     of view rather than the ESP32's)
 //   AUDIO_I2S_WS       GPIO_NUM_7
 //   AUDIO_AMP_ENABLE   GPIO_NUM_1
 //
