@@ -1,6 +1,6 @@
-#include "AudioManager.h"
-#include "Es8311Wire.h"
-#include "logger.h"
+#include "mini-audio-manager.h"
+#include "drivers/Es8311Wire.h"
+#include "mini/storage/logger.h"
 #include "mini/MiniConfig.h"
 #include "mini/neopixel/NeoPixel.h"
 
@@ -89,7 +89,7 @@ namespace
             char chunkId[5] = {0};
             memcpy(chunkId, chunkHeader, 4);
             uint32_t chunkSize = chunkHeader[4] | (chunkHeader[5] << 8) |
-                                 (chunkHeader[6] << 16) | (chunkHeader[7] << 24);
+                                (chunkHeader[6] << 16) | (chunkHeader[7] << 24);
 
             if (memcmp(chunkId, "fmt ", 4) == 0)
             {

@@ -52,10 +52,11 @@ const int PLAY_BUTTON = 2; //play/pause
 const int VOL_UP_BUTTON = 3;
 const int VOL_DOWN_BUTTON  = 14;
 
-  const int AUDIO_I2C_SDA = GPIO_NUM_16;   //(shared with touch + extended I2C)
-  const int AUDIO_I2C_SCL = GPIO_NUM_15;   //(shared with touch + extended I2C)
-  const int AUDIO_I2S_MCLK = GPIO_NUM_4;
-  const int AUDIO_I2S_BCK = GPIO_NUM_5;
-  const int AUDIO_I2S_DOUT = GPIO_NUM_8;
-  const int AUDIO_I2S_WS  = GPIO_NUM_7;
-  const int AUDIO_AMP_ENABLE  = GPIO_NUM_1;
+//Audio
+const int AUDIO_I2C_SDA = 16;   //(shared with touch + extended I2C)
+const int AUDIO_I2C_SCL = 15;   //(shared with touch + extended I2C)
+const int AUDIO_I2S_MCLK = 4;
+const int AUDIO_I2S_BCK = 5;
+const int AUDIO_I2S_DOUT = 8;
+const int AUDIO_I2S_WS  = 7;
+const int AUDIO_AMP_ENABLE  = 1;
