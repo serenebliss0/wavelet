@@ -1,9 +1,4 @@
-#include "mini/qr_setup.h"
+#include "mini/qr/qr_setup.h"
 #include "lvgl.h"
 
-String color = "pink"; //change this color var
-String model = "mini";
-
-String getSetupPayload(){
-    return buildQRPayload(model, color);
-}
+String getSetupPayload();
