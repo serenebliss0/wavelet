@@ -147,7 +147,6 @@ void loop() {
 
     //mini
     #ifdef WAVELET_MINI
-
     //LVGL events
     lv_timer_handler();
     ui_tick();
@@ -159,9 +158,7 @@ void loop() {
     processBleSetup();
 
     //Spotify
-    if (WiFi.status() == WL_CONNECTED) {
         updateSpotify();
-    }
     #endif
 
 #if defined(WAVELET_REGULAR)
