@@ -75,7 +75,7 @@ bool setupDone;
 void initializePreferences(){
 Preferences prefs;
 prefs.begin("wavelet", true);
-bool setupDone = prefs.getBool("setup_done", false);
+setupDone = prefs.getBool("setup_done", false);
 prefs.end();
 }
 
