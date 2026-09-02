@@ -51,3 +51,12 @@ constexpr int SD_D3  = 47;
 const int PLAY_BUTTON = 2; //play/pause
 const int VOL_UP_BUTTON = 3;
 const int VOL_DOWN_BUTTON  = 14;
+
+//Audio
+const int AUDIO_I2C_SDA = 16;   //(shared with touch + extended I2C)
+const int AUDIO_I2C_SCL = 15;   //(shared with touch + extended I2C)
+const int AUDIO_I2S_MCLK = 4;
+const int AUDIO_I2S_BCK = 5;
+const int AUDIO_I2S_DOUT = 8;
+const int AUDIO_I2S_WS  = 7;
+const int AUDIO_AMP_ENABLE  = 1;
