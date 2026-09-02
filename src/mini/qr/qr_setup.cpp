@@ -1,8 +1,4 @@
-#pragma once
-#include <Arduino.h>
-#include <Preferences.h>
-#include <lvgl.h>
-#include "mini/storage/logger.h"
+#include "qr_setup.h"
 
 String getOrCreateSetupToken() {
     Preferences prefs;
@@ -45,7 +41,6 @@ void printQRToSerial(const String& payload) {
     Serial.println(payload);
     Serial.println("[QR] Rendering handled by LVGL QR widget.");
 }
-
 
 // Main Entry
 void showSetupQR(String deviceId, String color, lv_obj_t* parent) {
