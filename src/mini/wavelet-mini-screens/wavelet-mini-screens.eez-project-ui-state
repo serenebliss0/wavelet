@@ -1,8 +1,8 @@
 {
   "navigation": {
-    "selectedUserPageObject": "[wavelet-mini-screens.eez-project]:/userPages/1",
+    "selectedUserPageObject": "[wavelet-mini-screens.eez-project]:/userPages/5",
     "selectedGlobalVariableObject": "[wavelet-mini-screens.eez-project]:/variables/globalVariables/5",
-    "selectedThemeObject": "[wavelet-mini-screens.eez-project]:/themes/0",
+    "selectedThemeObject": "[wavelet-mini-screens.eez-project]:/themes/1",
     "selectedThemeColorObject": "[wavelet-mini-screens.eez-project]:/colors/11",
     "selectedFontObject": "[wavelet-mini-screens.eez-project]:/fonts/3",
     "selectedBitmapObject": "[wavelet-mini-screens.eez-project]:/bitmaps/8",
@@ -28,7 +28,7 @@
           },
           {
             "type": "border",
-            "selected": 2,
+            "selected": 1,
             "size": 240,
             "location": "right",
             "children": [
@@ -212,17 +212,16 @@
               "type": "tabset",
               "id": "EDITORS",
               "weight": 47.24494706448508,
-              "selected": 1,
               "enableDeleteWhenEmpty": false,
               "enableClose": false,
               "children": [
                 {
                   "type": "tab",
                   "id": "#c3850bdf-8a15-4281-9e01-5f4df228d2b4",
-                  "name": "InitialQRPage",
+                  "name": "DefaultClock",
                   "component": "editor",
                   "config": {
-                    "objectPath": "[wavelet-mini-screens.eez-project]:/userPages/1",
+                    "objectPath": "[wavelet-mini-screens.eez-project]:/userPages/5",
                     "permanent": false
                   },
                   "icon": "svg:page"
@@ -250,8 +249,7 @@
                   },
                   "icon": "svg:page"
                 }
-              ],
-              "active": true
+              ]
             },
             {
               "type": "row",
@@ -271,7 +269,8 @@
                       "enableClose": false,
                       "icon": "svg:properties"
                     }
-                  ]
+                  ],
+                  "active": true
                 },
                 {
                   "type": "tabset",
@@ -1125,15 +1124,14 @@
     "[wavelet-mini-screens.eez-project]:/userPages/0[flow-state]": {
       "selectionFront": {},
       "selectionBack": {
-        "0": {},
-        "1": {}
+        "0": {}
       },
       "transform": {
         "translate": {
-          "x": -222.56909905980558,
-          "y": -173.00826776769892
+          "x": -252.22431305783013,
+          "y": -105.17662402465578
         },
-        "scale": 1.5
+        "scale": 1.75
       },
       "timeline": {
         "isEditorActive": false,
@@ -1149,15 +1147,13 @@
       "selectionFront": {},
       "selectionBack": {
         "0": {
-          "0": {
-            "$selected": true
-          }
+          "0": {}
         }
       },
       "transform": {
         "translate": {
-          "x": -245.40903222064938,
-          "y": -143.12779088928812
+          "x": -291.30384339946,
+          "y": -316.88783599610076
         },
         "scale": 1.5
       },
@@ -1179,10 +1175,10 @@
       },
       "transform": {
         "translate": {
-          "x": -283.4073421646914,
+          "x": -307.4073449112735,
           "y": -260.96999599739473
         },
-        "scale": 1.5
+        "scale": 2
       },
       "timeline": {
         "isEditorActive": false,
@@ -1203,7 +1199,7 @@
           "x": -160.51668802897134,
           "y": -153.6333339905841
         },
-        "scale": 0.5
+        "scale": 2
       },
       "timeline": {
         "isEditorActive": false,
@@ -1224,10 +1220,10 @@
       },
       "transform": {
         "translate": {
-          "x": -147.19995117187483,
-          "y": -218.6124420166015
+          "x": -333.26482763562854,
+          "y": -157.09290540422717
         },
-        "scale": 1
+        "scale": 2
       },
       "timeline": {
         "isEditorActive": false,
@@ -1239,12 +1235,33 @@
     "[wavelet-mini-screens.eez-project]:/userPages/5[flow-state]": {
       "selectionFront": {},
       "selectionBack": {
-        "0": {}
+        "0": {
+          "12": {
+            "$selected": true
+          }
+        }
       },
       "transform": {
         "translate": {
-          "x": -215.81386685061779,
-          "y": -241.08979066790965
+          "x": -279.9383680873664,
+          "y": -205.54330339539615
+        },
+        "scale": 1.75
+      },
+      "timeline": {
+        "isEditorActive": false,
+        "position": 0,
+        "secondToPx": 200,
+        "scrollLeft": 0
+      }
+    },
+    "[wavelet-mini-screens.eez-project]:/userPages/6[flow-state]": {
+      "selectionFront": {},
+      "selectionBack": {},
+      "transform": {
+        "translate": {
+          "x": -236.80399169921873,
+          "y": -142.25298767089845
         },
         "scale": 1.5
       },
@@ -1276,7 +1293,7 @@
   ],
   "showInactiveFlowsInDebugger": true,
   "globalFlowZoom": true,
-  "flowZoom": 1.5,
+  "flowZoom": 1.75,
   "implementationLanguage": "C",
   "openDialogDefaultPath": "C:\\Users\\Semire\\Downloads\\My Programming Journey 3\\arduino-practice\\projects\\07-esp32\\esp32-smart-speaker\\assets\\volume-icon -statusbar.png"
 }

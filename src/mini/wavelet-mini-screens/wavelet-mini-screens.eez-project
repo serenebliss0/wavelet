@@ -303,107 +303,9 @@
             }
           },
           "groupIndex": 0
-        },
-        {
-          "objID": "e16361f6-f868-44b2-ac8a-d0ebabedee05",
-          "type": "DelayActionComponent",
-          "left": 73,
-          "top": 366,
-          "width": 87,
-          "height": 65,
-          "customInputs": [],
-          "customOutputs": [],
-          "milliseconds": "4000\n"
-        },
-        {
-          "objID": "171df644-8836-49e9-fed9-0eca7cb13db2",
-          "type": "LVGLActionComponent",
-          "left": 494,
-          "top": 313,
-          "width": 341,
-          "height": 53,
-          "customInputs": [],
-          "customOutputs": [],
-          "actions": [
-            {
-              "objID": "05327937-c468-408a-e38a-0555265732e0",
-              "action": "changeScreen",
-              "screen": "InitialQRPage",
-              "screenType": "literal",
-              "fadeMode": "FADE_IN",
-              "fadeModeType": "literal",
-              "speed": 200,
-              "speedType": "literal",
-              "delay": 0,
-              "delayType": "literal",
-              "useStack": true,
-              "useStackType": "literal"
-            }
-          ]
-        },
-        {
-          "objID": "17b042fd-51d5-462b-96d0-b152c40c2a21",
-          "type": "CompareActionComponent",
-          "left": 240,
-          "top": 360,
-          "width": 161,
-          "height": 71,
-          "customInputs": [],
-          "customOutputs": [],
-          "A": "setupDone",
-          "B": "false",
-          "operator": "="
-        },
-        {
-          "objID": "0c14952e-49e9-456a-f66c-ea7a60f0041c",
-          "type": "LVGLActionComponent",
-          "left": 494,
-          "top": 455,
-          "width": 341,
-          "height": 53,
-          "customInputs": [],
-          "customOutputs": [],
-          "actions": [
-            {
-              "objID": "9f893208-2d92-4382-f20a-69d38dc3c9e1",
-              "action": "changeScreen",
-              "screen": "InitialQRPage",
-              "screenType": "literal",
-              "fadeMode": "FADE_IN",
-              "fadeModeType": "literal",
-              "speed": 200,
-              "speedType": "literal",
-              "delay": 0,
-              "delayType": "literal",
-              "useStack": true,
-              "useStackType": "literal"
-            }
-          ]
         }
       ],
-      "connectionLines": [
-        {
-          "objID": "6c200def-089f-44f1-e56f-1a929de0d5e4",
-          "source": "e16361f6-f868-44b2-ac8a-d0ebabedee05",
-          "output": "@seqout",
-          "target": "17b042fd-51d5-462b-96d0-b152c40c2a21",
-          "input": "@seqin"
-        },
-        {
-          "objID": "620ca615-971a-496f-9aef-dc40812bffab",
-          "source": "17b042fd-51d5-462b-96d0-b152c40c2a21",
-          "output": "True",
-          "target": "171df644-8836-49e9-fed9-0eca7cb13db2",
-          "input": "@seqin"
-        },
-        {
-          "objID": "5371e860-3fc2-42c2-98a8-2453ceb413e9",
-          "source": "17b042fd-51d5-462b-96d0-b152c40c2a21",
-          "output": "False",
-          "target": "0c14952e-49e9-456a-f66c-ea7a60f0041c",
-          "input": "@seqin"
-        }
-      ],
+      "connectionLines": [],
       "localVariables": [],
       "componentGroups": [],
       "userProperties": [],
@@ -833,8 +735,8 @@
           "type": "CompareActionComponent",
           "left": 103,
           "top": 507,
-          "width": 167,
-          "height": 71,
+          "width": 168,
+          "height": 69,
           "customInputs": [],
           "customOutputs": [],
           "A": "colorTheme",
@@ -2725,6 +2627,46 @@
               "textType": "literal",
               "longMode": "SCROLL",
               "recolor": false
+            },
+            {
+              "objID": "18e3326c-f78e-4683-9c8e-008aaf8946cc",
+              "type": "LVGLContainerWidget",
+              "left": -1,
+              "top": 0,
+              "width": 320,
+              "height": 240,
+              "customInputs": [],
+              "customOutputs": [],
+              "style": {
+                "objID": "f18005c1-e1f7-49cc-d271-ab67feed98d5",
+                "useStyle": "default",
+                "conditionalStyles": [],
+                "childStyles": []
+              },
+              "timeline": [],
+              "eventHandlers": [],
+              "identifier": "wallpaperImage",
+              "leftUnit": "px",
+              "topUnit": "px",
+              "widthUnit": "px",
+              "heightUnit": "px",
+              "children": [],
+              "widgetFlags": "CLICK_FOCUSABLE|GESTURE_BUBBLE|PRESS_LOCK|SCROLLABLE|SCROLL_CHAIN_HOR|SCROLL_CHAIN_VER|SCROLL_ELASTIC|SCROLL_MOMENTUM|SCROLL_WITH_ARROW|SNAPPABLE",
+              "hiddenFlagType": "literal",
+              "clickableFlag": true,
+              "clickableFlagType": "literal",
+              "flagScrollbarMode": "",
+              "flagScrollDirection": "",
+              "scrollSnapX": "",
+              "scrollSnapY": "",
+              "checkedStateType": "literal",
+              "disabledStateType": "literal",
+              "states": "",
+              "localStyles": {
+                "objID": "620c41c1-d0a6-41da-c108-aec7dd5b8728"
+              },
+              "group": "",
+              "groupIndex": 0
             }
           ],
           "widgetFlags": "CLICKABLE|PRESS_LOCK|CLICK_FOCUSABLE|GESTURE_BUBBLE|SNAPPABLE|SCROLLABLE|SCROLL_ELASTIC|SCROLL_MOMENTUM|SCROLL_CHAIN_HOR|SCROLL_CHAIN_VER",
@@ -2752,6 +2694,64 @@
       "componentGroups": [],
       "userProperties": [],
       "name": "DefaultClock",
+      "left": 0,
+      "top": 0,
+      "width": 320,
+      "height": 240,
+      "isUsedAsUserWidget": false,
+      "createAtStart": true,
+      "deleteOnScreenUnload": false
+    },
+    {
+      "objID": "2bea1f12-0d75-4ada-d86e-8c30b9dc293b",
+      "components": [
+        {
+          "objID": "cf769ef4-a1d9-4d57-9246-0251e960a22d",
+          "type": "LVGLScreenWidget",
+          "left": 0,
+          "top": 0,
+          "width": 320,
+          "height": 240,
+          "customInputs": [],
+          "customOutputs": [],
+          "style": {
+            "objID": "9838f404-595d-407d-c1dd-401aa5e2f67b",
+            "useStyle": "default",
+            "conditionalStyles": [],
+            "childStyles": []
+          },
+          "timeline": [],
+          "eventHandlers": [],
+          "leftUnit": "px",
+          "topUnit": "px",
+          "widthUnit": "px",
+          "heightUnit": "px",
+          "children": [],
+          "widgetFlags": "CLICKABLE|PRESS_LOCK|CLICK_FOCUSABLE|GESTURE_BUBBLE|SNAPPABLE|SCROLLABLE|SCROLL_ELASTIC|SCROLL_MOMENTUM|SCROLL_CHAIN_HOR|SCROLL_CHAIN_VER",
+          "hiddenFlagType": "literal",
+          "clickableFlag": true,
+          "clickableFlagType": "literal",
+          "checkedStateType": "literal",
+          "disabledStateType": "literal",
+          "states": "",
+          "localStyles": {
+            "objID": "88fdd71d-a5d2-44fd-e23d-4984fb6ecfbf",
+            "definition": {
+              "MAIN": {
+                "DEFAULT": {
+                  "bg_color": "Background"
+                }
+              }
+            }
+          },
+          "groupIndex": 0
+        }
+      ],
+      "connectionLines": [],
+      "localVariables": [],
+      "componentGroups": [],
+      "userProperties": [],
+      "name": "VolumePane",
       "left": 0,
       "top": 0,
       "width": 320,
