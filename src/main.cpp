@@ -35,7 +35,7 @@
 #include <Preferences.h>
 
 #ifdef WAVELET_MINI
-#include "mini/mini-setup-assistant.h"
+#include "mini/mini-setup-assistant.h" //contains functionality for the wavelet mini
 #endif
 
 #if defined(WAVELET_REGULAR)
@@ -161,16 +161,18 @@ void loop() {
         updateSpotify();
     #endif
 
-#if defined(WAVELET_REGULAR)
-#ifdef DEBUG
-int battery_level = readBatteryLevel();
-Serial.println(battery_level);
-#endif
-update_battery();
-checkModeButton();
-handlePowerButton();
-handlePreviousButton();
-handleNextButton();
-#endif
+    #if defined(WAVELET_REGULAR)
+
+    #ifdef DEBUG
+    int battery_level = readBatteryLevel();
+    Serial.println(battery_level);
+    #endif
+
+    update_battery();
+    checkModeButton();
+    handlePowerButton();
+    handlePreviousButton();
+    handleNextButton();
+    #endif
 
 }
