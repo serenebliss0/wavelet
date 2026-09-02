@@ -68,7 +68,10 @@ BluetoothA2DPSink a2dp_sink;
 //uncomment this line to enable BatteryStats
 #define BATTERIES_CONNECTED
 
-#define FIRMWARE_VERSION "1.0.0"
+#define MINI_FIRMWARE_VERSION "0.2.0"
+#define REGULAR_FIRMWARE_VERSION "1.0.0"
+#define MAX_FIRMWARE_VERSION "1.0.0"
+
 
 void setup() {
 

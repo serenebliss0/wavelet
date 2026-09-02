@@ -122,6 +122,13 @@ if (!setupDone) {
 //Init filesystem
 void initializeSD(){SDManager::begin();}
 
+void initializeAudio(){
+    AudioManager::begin(false); // false = touch already grabbed the shared I2C bus
+}
+
+void playBootChime(){
+    AudioManager::play("/media/boot/chime.wav");
+}
 
 void initializeWiFi(){
     if (hasStoredWifiCredentials()) {
@@ -143,6 +150,8 @@ void startSpotify(){
 
 void startFeatures(){
     initializeSD();
+    initializeAudio();
+    playBootChime();
     initializeWiFi();
     startSpotify();
 }

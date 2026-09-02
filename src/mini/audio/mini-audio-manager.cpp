@@ -37,7 +37,7 @@ namespace
     constexpr size_t   kMaxPathLen        = 96;
     constexpr size_t   kStreamChunkBytes  = 1024;
     constexpr uint32_t kDefaultSampleRate = 44100;
-    constexpr int       kDefaultVolume    = 70;
+    constexpr int kDefaultVolume    = 80; //keep volume between 70-80%
 
     struct PlayRequest
     {
