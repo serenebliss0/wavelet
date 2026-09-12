@@ -28,9 +28,11 @@ jobs:
         run: pio run
 
       - name: Rename firmware
+        env:
+          REF_NAME: ${{ github.ref_name }}
         run: |
           cp .pio/build/mini/firmware.bin \
-             Wavelet-firmware-${{ github.ref_name }}.bin
+             "Wavelet-firmware-${REF_NAME}.bin"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
