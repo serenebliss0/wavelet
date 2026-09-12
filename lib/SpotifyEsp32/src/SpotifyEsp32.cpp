@@ -456,10 +456,8 @@ header_resp Spotify::process_headers(){
       can_break = true;
     }
     // If can_break is true, find the end of headers and break
-    else if(can_break){
-      _client.find("\r\n\r\n");
-      break;
-    }
+    //removed smth here
+    
     // If line is a carriage return, indicating end of headers, break
     if (line == "\r") {
       break;
