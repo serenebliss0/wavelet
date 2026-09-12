@@ -30,3 +30,4 @@ void initializeSD();
 void initializeWiFi();
 void startSpotify();
 void startFeatures();
+void handleSpotifyLoop();

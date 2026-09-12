@@ -72,15 +72,20 @@ void startLED(){
 }
 
 
-bool setupDone = isSetupComplete;
+bool setupDone = false;
 //setup complete variable from BLEManager
 
 //NVS for mini
-void initializePreferences(){
-Preferences prefs;
-prefs.begin("wavelet", true);
-setupDone = prefs.getBool("setup_done", false);
-prefs.end();
+
+void initializePreferences() {
+    extern Preferences prefs;
+
+    setupDone = prefs.getBool("setup_done", false);
+
+    Serial.printf(
+        "[NVS] setup_done = %s\n",
+        setupDone ? "true" : "false"
+    );
 }
 
 String payload = "";
@@ -95,11 +100,6 @@ void initializeLVGL() {
     //load the boot splash screen immediately after init
     lv_scr_load(objects.boot_splash);
 
-    // lv_timer_create(
-    //     bootSplashTimer,
-    //     1500,
-    //     nullptr
-    // );
 }
 
 //TODO: Ability to change your default screen
@@ -122,56 +122,64 @@ void loadOnboardingScreen(){
 }
 
 void setDarkMode() {
-    eez_flow_set_theme("Dark Mode");
+    change_color_theme(1);
 }
 
 void setLightMode() {
-    eez_flow_set_theme("Light Mode");
+    change_color_theme(0);
 }
 
 // //debug only, negate logic in prod
-void startOrCheckOnboarding(){
+void startOrCheckOnboarding() {
 
+    initializeLVGL();
     setLightMode();
 
+    if (!setupDone) {
+        // Change later
+        // Color picker later
+        beginSetupMode("mini", "strawberry_pink");
+        payload = getSetupPayload();
 
-if (!setupDone) {
-
-    initializeLVGL();
-
-    //Change later
-    //Color picker later
-    beginSetupMode("mini", "strawberry_pink");
-    payload = getSetupPayload();
     #ifdef DEBUG
-    printQRToSerial(payload);
+            printQRToSerial(payload);
     #endif
 
-    loadPairingScreen();
+        // Show pairing after boot splash
+        // Boot splash → Pairing
+        lv_timer_create(
+            [](lv_timer_t *timer) {
+                lv_scr_load(objects.initial_qr_page);
+                lv_timer_del(timer);
+            },
+            1500,
+            nullptr
+        );
 
-    //change the qrcode to the generated payload
-    lv_qrcode_update(
-        objects.obj0,
-        payload.c_str(),
-        payload.length()
-    );
-    //change the manual code to the token
-    lv_label_set_text(
-        objects.obj6,
-        token.c_str()
-    );
-}
-//setup complete condition
-else{
+        // Prepare pairing screen while splash is showing
+        lv_qrcode_update(
+            objects.obj0,
+            payload.c_str(),
+            payload.length()
+        );
 
-    initializeLVGL();
+        lv_label_set_text(
+            objects.obj6,
+            token.c_str()
+        );
 
-    //load default clock 
-    loadDefaultScreen();
-}
-
-//when other screens are ready
-//add second condition
+    } 
+    else {
+        // Show default clock after boot splash
+        lv_timer_create(
+            [](lv_timer_t *timer) {
+                lv_scr_load(objects.default_clock);
+                lv_timer_del(timer);
+            },
+            1500,
+            nullptr
+        );
+    }
 }
 
 //Init filesystem
@@ -208,8 +216,17 @@ void startFeatures(){
     initializeAudio();
     playBootChime();
     initializeWiFi();
-    startSpotify();
+    if(setupDone){
+        startSpotify();
+    }
 }
 
+void handleSpotifyLoop(){
+    if(setupDone){
+        if(WiFi.status() == WL_CONNECTED){
+            updateSpotify();
+        }
+    }
+}
 
 

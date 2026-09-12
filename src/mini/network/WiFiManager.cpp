@@ -16,18 +16,20 @@ static bool wifiManagerDone = false;
 static unsigned long wifiConnectStartTime = 0;
 static const unsigned long WIFI_TIMEOUT = 10000; // same timeout as BLEManager, kept consistent
 
-bool hasStoredWifiCredentials() {
-    Preferences prefs;
+extern Preferences prefs;
 
-    if (!prefs.begin("wavelet", true)) { // read-only open
-        Logger::error("WiFiManager", "NVS failed to open preferences");
-        Serial.println("[NVS] Failed to open preferences");
-        return false;
-    }
+bool hasStoredWifiCredentials() {
+    // Preferences prefs;
+
+    // if (!prefs.begin("wavelet", true)) { // read-only open
+    //     Logger::error("WiFiManager", "NVS failed to open preferences");
+    //     Serial.println("[NVS] Failed to open preferences");
+    //     return false;
+    // }
 
     String ssid = prefs.getString("wifi_ssid", "");
 
-    prefs.end();
+    // prefs.end();
 
     return !ssid.isEmpty();
 }
@@ -35,20 +37,20 @@ bool hasStoredWifiCredentials() {
 
 void beginWifiManager() {
 
-    Preferences prefs;
+    // Preferences prefs;
 
-    if (!prefs.begin("wavelet", true)) {
-        Logger::error("WiFiManager", "NVS failed to open preferences");
-        Serial.println("[NVS] Failed to open preferences");
-        setStatus("WIFI_FAILED");
-        wifiManagerDone = true;
-        return;
-    }
+    // if (!prefs.begin("wavelet", true)) {
+    //     Logger::error("WiFiManager", "NVS failed to open preferences");
+    //     Serial.println("[NVS] Failed to open preferences");
+    //     setStatus("WIFI_FAILED");
+    //     wifiManagerDone = true;
+    //     return;
+    // }
 
     String ssid = prefs.getString("wifi_ssid", "");
     String pass = prefs.getString("wifi_pass", "");
 
-    prefs.end();
+    // prefs.end();
 
     if (ssid.isEmpty()) {
         Serial.println("[WiFiManager] No stored SSID");
