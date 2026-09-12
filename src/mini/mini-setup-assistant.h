@@ -14,6 +14,7 @@
 #include "mini/mini-ble/BLEManager.h"
 #include "mini/wavelet-mini-screens/src/ui/screens.h"
 #include "mini/wavelet-mini-screens/src/ui/ui.h"
+#include "mini/wavelet-mini-screens/src/ui/eez-flow.h"
 #include <TFT_eSPI.h>
 #include "mini/setup_helper.h"
 #include "mini/display/touch.h"
@@ -29,3 +30,4 @@ void initializeSD();
 void initializeWiFi();
 void startSpotify();
 void startFeatures();
+void handleSpotifyLoop();

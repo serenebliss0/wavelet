@@ -14,6 +14,7 @@
       "displayWidth": 320,
       "displayHeight": 240,
       "displayBorderRadius": 0,
+      "darkTheme": false,
       "colorBpp": "16",
       "bitmapColorFormat": "BGR",
       "author": "Semire Designs",
@@ -99,7 +100,7 @@
       "imageExportMode": "source",
       "fontExportMode": "source",
       "fileSystemPath": "",
-      "lvglInclude": "lvgl/lvgl.h",
+      "lvglInclude": "lvgl.h",
       "screensLifetimeSupport": false,
       "useDockerDesktop": true,
       "generateSourceCodeForEezFramework": true,
@@ -123,7 +124,7 @@
         "objID": "124b8791-bf07-44c5-bee0-827d571beb76",
         "name": "colorTheme",
         "type": "boolean",
-        "defaultValue": "false",
+        "defaultValue": "true",
         "persistent": false
       },
       {
@@ -211,15 +212,7 @@
             "childStyles": []
           },
           "timeline": [],
-          "eventHandlers": [
-            {
-              "objID": "2f8e933d-e1ea-404e-d12b-5d88ff80edcf",
-              "eventName": "PRESSED",
-              "handlerType": "action",
-              "action": "Delat",
-              "userData": 0
-            }
-          ],
+          "eventHandlers": [],
           "leftUnit": "px",
           "topUnit": "px",
           "widthUnit": "px",
@@ -700,9 +693,9 @@
               "recolor": false
             }
           ],
-          "widgetFlags": "CLICKABLE|PRESS_LOCK|CLICK_FOCUSABLE|GESTURE_BUBBLE|SNAPPABLE|SCROLLABLE|SCROLL_ELASTIC|SCROLL_MOMENTUM|SCROLL_CHAIN_HOR|SCROLL_CHAIN_VER",
+          "widgetFlags": "CLICKABLE|PRESS_LOCK|GESTURE_BUBBLE|SNAPPABLE|SCROLLABLE|SCROLL_ELASTIC|SCROLL_MOMENTUM|SCROLL_CHAIN_HOR|SCROLL_CHAIN_VER",
           "hiddenFlagType": "literal",
-          "clickableFlag": true,
+          "clickableFlag": false,
           "clickableFlagType": "literal",
           "checkedStateType": "literal",
           "disabledStateType": "literal",
@@ -735,8 +728,8 @@
           "type": "CompareActionComponent",
           "left": 103,
           "top": 507,
-          "width": 168,
-          "height": 69,
+          "width": 167,
+          "height": 71,
           "customInputs": [],
           "customOutputs": [],
           "A": "colorTheme",
@@ -1137,32 +1130,6 @@
             }
           },
           "groupIndex": 0
-        },
-        {
-          "objID": "1a4e8e06-c177-4db5-c51b-4f3d2e517dd8",
-          "type": "LVGLActionComponent",
-          "left": 117,
-          "top": 553,
-          "width": 329,
-          "height": 53,
-          "customInputs": [],
-          "customOutputs": [],
-          "actions": [
-            {
-              "objID": "8b0926f7-7823-458b-ddae-37720c6face8",
-              "action": "changeScreen",
-              "screen": "Onboarding2",
-              "screenType": "literal",
-              "fadeMode": "FADE_IN",
-              "fadeModeType": "literal",
-              "speed": 200,
-              "speedType": "literal",
-              "delay": 0,
-              "delayType": "literal",
-              "useStack": true,
-              "useStackType": "literal"
-            }
-          ]
         },
         {
           "objID": "a0604acb-8d6a-4d7c-c0cd-a4a845e89558",
@@ -1969,7 +1936,7 @@
           "type": "LVGLActionComponent",
           "left": 55,
           "top": 360,
-          "width": 329,
+          "width": 335,
           "height": 53,
           "customInputs": [],
           "customOutputs": [],
@@ -1977,7 +1944,7 @@
             {
               "objID": "73261529-e358-4655-82be-eb2fec8932b0",
               "action": "changeScreen",
-              "screen": "Onboarding2",
+              "screen": "DefaultClock",
               "screenType": "literal",
               "fadeMode": "FADE_IN",
               "fadeModeType": "literal",

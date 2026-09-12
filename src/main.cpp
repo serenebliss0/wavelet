@@ -81,7 +81,9 @@ void setup() {
 
     ledcSetup(0, 2000, 8);
 
-    prefs.begin("app", false); // open once
+    // prefs.begin("app", false); // open once
+    prefs.begin("wavelet", false);
+
 
     #if defined(WAVELET_REGULAR)
     pinMode(Config::BUZZER, OUTPUT);
@@ -101,7 +103,7 @@ void setup() {
     #endif
 
     #ifdef DEBUG
-    String mac_addr = WiFi.macAddress();
+    // String mac_addr = WiFi.macAddress();
     Serial.println(WiFi.macAddress());
     #endif
 
@@ -161,7 +163,8 @@ void loop() {
     processBleSetup();
 
     //Spotify
-        updateSpotify();
+        // updateSpotify();
+        handleSpotifyLoop();
     #endif
 
     #if defined(WAVELET_REGULAR)

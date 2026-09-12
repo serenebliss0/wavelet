@@ -18,7 +18,15 @@
 
 #include <lvgl.h>
 #if LVGL_VERSION_MAJOR > 9 || (LVGL_VERSION_MAJOR == 9 && LVGL_VERSION_MINOR > 1)
-#include <lvgl/src/lvgl_private.h>
+    #ifdef __has_include
+        #if __has_include("lvgl_private.h")
+            #include "lvgl_private.h"
+        #elif __has_include("src/lvgl_private.h")
+            #include "src/lvgl_private.h"
+        #elif __has_include("lvgl/src/lvgl_private.h")
+            #include "lvgl/src/lvgl_private.h"
+        #endif
+    #endif
 #endif
 
 // -----------------------------------------------------------------------------

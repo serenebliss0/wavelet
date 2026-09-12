@@ -6,6 +6,7 @@
 #include <Preferences.h>
 #include <WiFi.h>
 #include "mini/storage/logger.h"
+#include "lvgl.h"
 
 // UUIDs
 #define WAVELET_SERVICE_UUID    "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
@@ -17,12 +18,13 @@
 #define CHAR_DEVICE_NAME_UUID   "beb5483e-36e1-4688-b7f5-ea07361b26ad"
 
 //Global Vars
+extern Preferences prefs;
 BLEServer*         pServer     = nullptr;
 BLECharacteristic* pStatus     = nullptr;
 BLECharacteristic* pDeviceInfo = nullptr;
 
 bool deviceConnected = false;
-bool isSetupComplete = false;
+// bool isSetupComplete = false;
 
 bool wifiConnectionRequested = false;
 bool wifiConnectionInProgress = false;
@@ -49,56 +51,48 @@ void setStatus(const char* status) {
 }
 
 void saveWifiCredentials(const String& ssid, const String& pass) {
-    Preferences prefs;
+    // Preferences prefs;
 
-    if (!prefs.begin("wavelet", false)) {
-        Logger::error("BLE", "NVS failed to open preferences");
-        Serial.println("[NVS] Failed to open preferences");
-        return;
-    }
+    // if (!prefs.begin("wavelet", false)) {
+    //     Logger::error("BLE", "NVS failed to open preferences");
+    //     Serial.println("[NVS] Failed to open preferences");
+    //     return;
+    // }
 
     prefs.putString("wifi_ssid", ssid);
     prefs.putString("wifi_pass", pass);
 
-    prefs.end();
 
     Serial.println("[NVS] WiFi credentials saved");
-    Logger::info("BLE", "WiFi credentials saved");
+    // Logger::info("BLE", "WiFi credentials saved");
 }
 
 void saveDeviceName(const String& name) {
-    Preferences prefs;
+    // Preferences prefs;
 
-    if (!prefs.begin("wavelet", false)) {
-        Logger::error("BLE", "NVS failed to open preferences");
-        Serial.println("[NVS] Failed to open preferences");
-        return;
-    }
+    // if (!prefs.begin("wavelet", false)) {
+    //     Logger::error("BLE", "NVS failed to open preferences");
+    //     Serial.println("[NVS] Failed to open preferences");
+    //     return;
+    // }
 
     prefs.putString("device_name", name);
 
-    prefs.end();
 
     Serial.printf("[NVS] Device name saved: %s\n", name.c_str());
-    Logger::info("NVS", "Device name saved");
+    // Logger::info("NVS", "Device name saved");
 
 }
 
 void saveSetupComplete() {
-    Preferences prefs;
-
-    if (!prefs.begin("wavelet", false)) {
-        Logger::error("BLE", "NVS failed to open preferences");
-        Serial.println("[NVS] Failed to open preferences");
-        return;
-    }
-
     prefs.putBool("setup_done", true);
 
-    prefs.end();
-
     Serial.println("[NVS] Setup marked complete");
-    Logger::info("NVS", "The device has completed setup");
+
+    Serial.printf(
+        "[NVS] setup_done = %s\n",
+        prefs.getBool("setup_done", false) ? "true" : "false"
+    );
 }
 
 
@@ -273,7 +267,8 @@ class CommandCallback : public BLECharacteristicCallbacks {
 
             saveSetupComplete();
 
-            isSetupComplete = true;
+            // isSetupComplete = true;
+            // prefs.putBool("setup_done", true);
 
             setStatus("READY");
 

@@ -1,13 +1,13 @@
 {
   "navigation": {
-    "selectedUserPageObject": "[wavelet-mini-screens.eez-project]:/userPages/5",
-    "selectedGlobalVariableObject": "[wavelet-mini-screens.eez-project]:/variables/globalVariables/5",
+    "selectedUserPageObject": "[wavelet-mini-screens.eez-project]:/userPages/2",
+    "selectedGlobalVariableObject": "[wavelet-mini-screens.eez-project]:/variables/globalVariables/1",
     "selectedThemeObject": "[wavelet-mini-screens.eez-project]:/themes/1",
     "selectedThemeColorObject": "[wavelet-mini-screens.eez-project]:/colors/11",
     "selectedFontObject": "[wavelet-mini-screens.eez-project]:/fonts/3",
     "selectedBitmapObject": "[wavelet-mini-screens.eez-project]:/bitmaps/8",
     "subnavigationSelectedItems": {
-      "variables-tab/sub-navigation/selected-item": "Widgets"
+      "variables-tab/sub-navigation/selected-item": "Actions"
     }
   },
   "layoutModel": {
@@ -28,7 +28,7 @@
           },
           {
             "type": "border",
-            "selected": 1,
+            "selected": 5,
             "size": 240,
             "location": "right",
             "children": [
@@ -218,10 +218,10 @@
                 {
                   "type": "tab",
                   "id": "#c3850bdf-8a15-4281-9e01-5f4df228d2b4",
-                  "name": "DefaultClock",
+                  "name": "Onboarding1",
                   "component": "editor",
                   "config": {
-                    "objectPath": "[wavelet-mini-screens.eez-project]:/userPages/5",
+                    "objectPath": "[wavelet-mini-screens.eez-project]:/userPages/2",
                     "permanent": false
                   },
                   "icon": "svg:page"
@@ -249,7 +249,8 @@
                   },
                   "icon": "svg:page"
                 }
-              ]
+              ],
+              "active": true
             },
             {
               "type": "row",
@@ -269,8 +270,7 @@
                       "enableClose": false,
                       "icon": "svg:properties"
                     }
-                  ],
-                  "active": true
+                  ]
                 },
                 {
                   "type": "tabset",
@@ -505,10 +505,10 @@
                 {
                   "type": "tab",
                   "id": "#0fd45387-da74-4070-9db0-25df750ce132",
-                  "name": "InitialQRPage",
+                  "name": "Onboarding1",
                   "component": "editor",
                   "config": {
-                    "objectPath": "[wavelet-mini-screens.eez-project]:/userPages/1",
+                    "objectPath": "[wavelet-mini-screens.eez-project]:/userPages/2",
                     "permanent": false
                   },
                   "icon": "svg:page"
@@ -1128,16 +1128,16 @@
       },
       "transform": {
         "translate": {
-          "x": -252.22431305783013,
-          "y": -105.17662402465578
+          "x": -176.48336226707252,
+          "y": -147.22295866365673
         },
-        "scale": 1.75
+        "scale": 0.75
       },
       "timeline": {
         "isEditorActive": false,
-        "position": 0,
+        "position": 0.2,
         "secondToPx": 200,
-        "scrollLeft": 0
+        "scrollLeft": 73.61390686035156
       }
     },
     "[wavelet-mini-screens.eez-project]:/lvglStyles/styles[tree-state]": {
@@ -1148,14 +1148,17 @@
       "selectionBack": {
         "0": {
           "0": {}
+        },
+        "2": {
+          "$selected": true
         }
       },
       "transform": {
         "translate": {
-          "x": -291.30384339946,
-          "y": -316.88783599610076
+          "x": -178.5325805700155,
+          "y": -242.70261560716992
         },
-        "scale": 1.5
+        "scale": 0.75
       },
       "timeline": {
         "isEditorActive": false,
@@ -1168,21 +1171,22 @@
       "selectionFront": {},
       "selectionBack": {
         "0": {
+          "1": {},
           "3": {},
           "4": {}
         },
-        "2": {}
+        "1": {}
       },
       "transform": {
         "translate": {
-          "x": -307.4073449112735,
-          "y": -260.96999599739473
+          "x": -212.62512856855358,
+          "y": -236.52473220557883
         },
-        "scale": 2
+        "scale": 0.75
       },
       "timeline": {
         "isEditorActive": false,
-        "position": 0,
+        "position": 0.5,
         "secondToPx": 200,
         "scrollLeft": 0
       }
@@ -1191,15 +1195,17 @@
       "selectionFront": {},
       "selectionBack": {
         "0": {
-          "3": {}
+          "3": {
+            "0": {}
+          }
         }
       },
       "transform": {
         "translate": {
-          "x": -160.51668802897134,
-          "y": -153.6333339905841
+          "x": -169.64539668009309,
+          "y": -247.65903898923324
         },
-        "scale": 2
+        "scale": 1.25
       },
       "timeline": {
         "isEditorActive": false,
@@ -1220,10 +1226,10 @@
       },
       "transform": {
         "translate": {
-          "x": -333.26482763562854,
-          "y": -157.09290540422717
+          "x": -246.7246683024967,
+          "y": -367.3803347336203
         },
-        "scale": 2
+        "scale": 1.25
       },
       "timeline": {
         "isEditorActive": false,
@@ -1236,17 +1242,15 @@
       "selectionFront": {},
       "selectionBack": {
         "0": {
-          "12": {
-            "$selected": true
-          }
+          "12": {}
         }
       },
       "transform": {
         "translate": {
-          "x": -279.9383680873664,
-          "y": -205.54330339539615
+          "x": -255.62902691826642,
+          "y": -160.05763205980347
         },
-        "scale": 1.75
+        "scale": 1
       },
       "timeline": {
         "isEditorActive": false,
@@ -1263,7 +1267,7 @@
           "x": -236.80399169921873,
           "y": -142.25298767089845
         },
-        "scale": 1.5
+        "scale": 1
       },
       "timeline": {
         "isEditorActive": false,
@@ -1279,6 +1283,7 @@
   "searchMatchWholeWord": false,
   "replaceEnabled": false,
   "replaceText": "",
+  "pageEditorFrontFace": false,
   "pageRuntimeFrontFace": true,
   "breakpoints": {},
   "watchExpressions": [],
@@ -1293,7 +1298,7 @@
   ],
   "showInactiveFlowsInDebugger": true,
   "globalFlowZoom": true,
-  "flowZoom": 1.75,
+  "flowZoom": 0.75,
   "implementationLanguage": "C",
   "openDialogDefaultPath": "C:\\Users\\Semire\\Downloads\\My Programming Journey 3\\arduino-practice\\projects\\07-esp32\\esp32-smart-speaker\\assets\\volume-icon -statusbar.png"
 }

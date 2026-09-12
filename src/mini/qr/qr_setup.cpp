@@ -1,8 +1,9 @@
 #include "qr_setup.h"
+extern Preferences prefs;
 
 String getOrCreateSetupToken() {
-    Preferences prefs;
-    prefs.begin("wavelet", false);
+    // Preferences prefs;
+    // prefs.begin("wavelet", false);
 
     String token = prefs.getString("setup_token", "");
 
@@ -16,7 +17,7 @@ String getOrCreateSetupToken() {
         Serial.printf("[QR] Generated new token: %s\n", token.c_str());
     }
 
-    prefs.end();
+    // prefs.end();
     return token;
 }
 
