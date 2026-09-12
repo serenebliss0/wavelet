@@ -17,7 +17,8 @@ enum ScreensEnum {
     SCREEN_ID_ONBOARDING2 = 4,
     SCREEN_ID_ONBOARDING3 = 5,
     SCREEN_ID_DEFAULT_CLOCK = 6,
-    _SCREEN_ID_LAST = 6
+    SCREEN_ID_VOLUME_PANE = 7,
+    _SCREEN_ID_LAST = 7
 };
 
 typedef struct _objects_t {
@@ -27,6 +28,7 @@ typedef struct _objects_t {
     lv_obj_t *onboarding2;
     lv_obj_t *onboarding3;
     lv_obj_t *default_clock;
+    lv_obj_t *volume_pane;
     lv_obj_t *wavelet_log;
     lv_obj_t *obj0;
     lv_obj_t *obj1;
@@ -48,6 +50,9 @@ typedef struct _objects_t {
     lv_obj_t *obj17;
     lv_obj_t *obj18;
     lv_obj_t *obj19;
+    lv_obj_t *wallpaper_image;
+    lv_obj_t *obj20;
+    lv_obj_t *obj21;
 } objects_t;
 
 extern objects_t objects;
@@ -69,6 +74,9 @@ void tick_screen_onboarding3();
 
 void create_screen_default_clock();
 void tick_screen_default_clock();
+
+void create_screen_volume_pane();
+void tick_screen_volume_pane();
 
 void tick_screen_by_id(enum ScreensEnum screenId);
 void tick_screen(int screen_index);

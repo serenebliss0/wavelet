@@ -1,6 +1,7 @@
 //Wavelet Mini Setup Assistant
 
 #include "mini/mini-setup-assistant.h"
+#include "mini-ble/BLEManager.h"
 
 //Setting up display for MINI
 // TODO: Give each model its own module and free up main.cpp
@@ -65,12 +66,15 @@ lv_indev_drv_register(&indev_drv);
 //Start LED
 void startLED(){
     ledInit();
+
+    //Change led state to boot
     ledSetState(LedState::BOOT);
 }
 
-//Change led state to boot
 
-bool setupDone;
+bool setupDone = isSetupComplete;
+//setup complete variable from BLEManager
+
 //NVS for mini
 void initializePreferences(){
 Preferences prefs;
@@ -82,16 +86,59 @@ prefs.end();
 String payload = "";
 String token = getOrCreateSetupToken();
 
-void initializeLVGL(){
+
+void initializeLVGL() {
     //init LVGL UI and create screens
-    ui_init();
-    create_screens();    //init LVGL UI and create screens
+    ui_init(); 
+    create_screens();
+
+    //load the boot splash screen immediately after init
+    lv_scr_load(objects.boot_splash);
+
+    // lv_timer_create(
+    //     bootSplashTimer,
+    //     1500,
+    //     nullptr
+    // );
+}
+
+//TODO: Ability to change your default screen
+void loadDefaultScreen(){
+    lv_scr_load_anim(
+        objects.default_clock,
+        LV_SCR_LOAD_ANIM_FADE_IN,
+        300,
+        0,
+        false
+    );
+}
+
+void loadPairingScreen(){
+    lv_scr_load(objects.initial_qr_page);
+}
+
+void loadOnboardingScreen(){
+    lv_scr_load(objects.onboarding1);
+}
+
+void setDarkMode() {
+    eez_flow_set_theme("Dark Mode");
+}
+
+void setLightMode() {
+    eez_flow_set_theme("Light Mode");
 }
 
 // //debug only, negate logic in prod
 void startOrCheckOnboarding(){
 
+    setLightMode();
+
+
 if (!setupDone) {
+
+    initializeLVGL();
+
     //Change later
     //Color picker later
     beginSetupMode("mini", "strawberry_pink");
@@ -100,7 +147,7 @@ if (!setupDone) {
     printQRToSerial(payload);
     #endif
 
-    initializeLVGL();
+    loadPairingScreen();
 
     //change the qrcode to the generated payload
     lv_qrcode_update(
@@ -113,6 +160,14 @@ if (!setupDone) {
         objects.obj6,
         token.c_str()
     );
+}
+//setup complete condition
+else{
+
+    initializeLVGL();
+
+    //load default clock 
+    loadDefaultScreen();
 }
 
 //when other screens are ready

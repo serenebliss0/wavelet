@@ -13,6 +13,7 @@
     "styles.h",
     "ui.c",
     "ui.h",
+    "ui_font_font_icons.c",
     "ui_font_inter_10.c",
     "ui_font_inter_7.c",
     "ui_font_nunito_18.c",
