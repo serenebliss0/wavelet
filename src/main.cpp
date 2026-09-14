@@ -39,12 +39,12 @@
 #endif
 
 #if defined(WAVELET_REGULAR)
-#include "input/Buttons.h"
-#include "audio/AudioManager.h"
-#include "ble/BLEManager.h"
-#include "core/Speaker.h"
+#include "regular/input/Buttons.h"
+#include "regular/audio/AudioManager.h"
+#include "regular/ble/BLEManager.h"
+#include "regular/core/Speaker.h"
 #include "BluetoothA2DPSink.h"
-#include "storage/PreferencesManager.h"
+#include "regular/storage/PreferencesManager.h"
 #endif
 
 
@@ -68,9 +68,9 @@ BluetoothA2DPSink a2dp_sink;
 //uncomment this line to enable BatteryStats
 #define BATTERIES_CONNECTED
 
-#define MINI_FIRMWARE_VERSION "0.2.0"
-#define REGULAR_FIRMWARE_VERSION "1.0.0"
-#define MAX_FIRMWARE_VERSION "1.0.0"
+#define MINI_FIRMWARE_VERSION "0.3.0"
+#define REGULAR_FIRMWARE_VERSION "0.1.0"
+#define MAX_FIRMWARE_VERSION "0.0.0"
 
 
 void setup() {
@@ -175,7 +175,6 @@ void loop() {
     #endif
 
     update_battery();
-    checkModeButton();
     handlePowerButton();
     handlePreviousButton();
     handleNextButton();

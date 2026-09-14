@@ -3,4 +3,3 @@
 void handlePowerButton();
 void handlePreviousButton();
 void handleNextButton();
-void checkModeButton();
