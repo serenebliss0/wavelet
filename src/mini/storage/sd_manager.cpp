@@ -29,7 +29,6 @@ bool SDManager::begin()
     Serial.println("[SD] Pins configured");
     Logger::info("SD", "SD Pins Configured");
 
-
     // Initialize SD card
     if (!SD_MMC.begin())
     {
@@ -46,6 +45,20 @@ bool SDManager::begin()
     Logger::info("SD", "SD init successful");
 
     initializeFilesystem();
+
+    return true;
+}
+
+bool SDManager::end()
+{
+    if (!sdMounted)
+        return true;
+
+    SD_MMC.end();
+    sdMounted = false;
+
+    Serial.println("[SD] Unmounted cleanly");
+    Logger::info("SD", "SD unmounted cleanly");
 
     return true;
 }
@@ -71,6 +84,14 @@ bool SDManager::mkdir(const char* path)
     return SD_MMC.mkdir(path);
 }
 
+bool SDManager::remove(const char* path)
+{
+    if (!sdMounted)
+        return false;
+
+    return SD_MMC.remove(path);
+}
+
 bool SDManager::initializeFilesystem()
 {
     Serial.println("[SD] Initializing filesystem...");
@@ -84,12 +105,10 @@ bool SDManager::initializeFilesystem()
     mkdir("/cache/album_art");
     mkdir("/cache/weather");
 
-
     mkdir("/media");
     mkdir("/media/wallpapers");
     mkdir("/media/notifications");
     mkdir("/media/boot");
-
 
     mkdir("/logs");
     mkdir("/plugins");
@@ -97,7 +116,7 @@ bool SDManager::initializeFilesystem()
 
     Serial.println("[SD] Filesystem initialized");
     Logger::info("SD", "Filesystem initialized");
-    
+
     return true;
 }
 
@@ -118,19 +137,79 @@ String SDManager::readFile(const char* path)
     return data;
 }
 
+File SDManager::openForWriteAtomic(const char* path, String& outTempPath)
+{
+    if (!sdMounted)
+        return File();
+
+    outTempPath = String(path) + ".tmp";
+
+    // Clear out any stale temp file left behind by a previous write
+    // that never got committed (e.g. the last power interruption).
+    if (SD_MMC.exists(outTempPath))
+        SD_MMC.remove(outTempPath);
+
+    return SD_MMC.open(outTempPath, FILE_WRITE);
+}
+
+bool SDManager::commitAtomicWrite(const char* finalPath, const String& tempPath)
+{
+    if (!sdMounted)
+        return false;
+
+    if (!SD_MMC.exists(tempPath))
+    {
+        Logger::error("SD", "Atomic commit: temp file missing");
+        return false;
+    }
+
+    // Only touch the real file once we know the replacement is ready.
+    if (SD_MMC.exists(finalPath))
+    {
+        if (!SD_MMC.remove(finalPath))
+        {
+            Logger::error("SD", "Atomic commit: failed to remove old file");
+            return false;
+        }
+    }
+
+    if (!SD_MMC.rename(tempPath.c_str(), finalPath))
+    {
+        Logger::error("SD", "Atomic commit: rename failed");
+        return false;
+    }
+
+    return true;
+}
+
 bool SDManager::writeFile(const char* path, const String& data)
 {
     if (!sdMounted)
         return false;
 
-    File file = SD_MMC.open(path, FILE_WRITE);
+    String tempPath;
+    File file = openForWriteAtomic(path, tempPath);
 
     if (!file)
         return false;
 
-    file.print(data);
+    size_t written = file.print(data);
 
+    file.flush();
     file.close();
+
+    if (written != data.length())
+    {
+        Logger::error("SD", "writeFile: short write, discarding temp file");
+        SD_MMC.remove(tempPath);
+        return false;
+    }
+
+    if (!commitAtomicWrite(path, tempPath))
+    {
+        Logger::error("SD", "writeFile: commit failed");
+        return false;
+    }
 
     return true;
 }
@@ -145,17 +224,18 @@ bool SDManager::appendFile(const char* path, const String& data)
     if (!file)
         return false;
 
-    file.print(data);
+    size_t written = file.print(data);
 
+    file.flush();
     file.close();
 
-    return true;
+    return written == data.length();
 }
 
 File SDManager::openForWrite(const char* path)
 {
     if (!sdMounted)
-        return File(); // invalid/empty File, caller checks with if(!file)
+        return File();
 
     return SD_MMC.open(path, FILE_WRITE);
 }
