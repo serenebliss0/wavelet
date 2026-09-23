@@ -46,7 +46,13 @@ static bool downloadAlbumArt(const String &url, const String &albumId) {
         return false;
     }
 
-    File file = SDManager::openForWrite(path.c_str());
+    // Stream into a .tmp file, not the real destination. This is a
+    // network-speed-dependent write that can take seconds — the exact
+    // kind of long exposure window that turns a random power blip into
+    // a corrupted file. The real file is only touched once the full
+    // download is verified complete.
+    String tempPath;
+    File file = SDManager::openForWriteAtomic(path.c_str(), tempPath);
     if (!file) {
         Serial.println("[ART] Failed to open file for writing");
         Logger::error("Art", "Failed to open file for writing");
@@ -59,13 +65,22 @@ static bool downloadAlbumArt(const String &url, const String &albumId) {
 
     size_t totalWritten = 0;
     int contentLength = http.getSize();
-    
+    bool writeError = false;
+
     while (http.connected() && (contentLength > 0 || contentLength == -1)) {
         size_t available = stream->available();
         if (available) {
             int bytesRead = stream->readBytes(buf, min(available, sizeof(buf)));
-            file.write(buf, bytesRead);
-            totalWritten += bytesRead;
+            size_t bytesWritten = file.write(buf, bytesRead);
+
+            if (bytesWritten != (size_t)bytesRead) {
+                Serial.println("[ART] Write error mid-download, aborting");
+                Logger::error("Art", "Write error mid-download");
+                writeError = true;
+                break;
+            }
+
+            totalWritten += bytesWritten;
             if (contentLength > 0) {
                 contentLength -= bytesRead;
             }
@@ -74,10 +89,30 @@ static bool downloadAlbumArt(const String &url, const String &albumId) {
         delay(1);
     }
 
+    file.flush();
     file.close();
     http.end();
 
-    Serial.printf("[ART] Saved %d bytes to %s\n", totalWritten, path.c_str());
+    bool incomplete = (contentLength > 0 && contentLength != -1);
+
+    if (writeError || incomplete) {
+        // Download broke early or a write failed partway through —
+        // throw away the .tmp file. The real file (old art, or nothing)
+        // is never touched, so we don't end up with a half-saved image
+        // silently passed off as "cached".
+        SDManager::remove(tempPath.c_str());
+        Serial.println("[ART] Download incomplete or write failed, discarding");
+        return false;
+    }
+
+    if (!SDManager::commitAtomicWrite(path.c_str(), tempPath)) {
+        Serial.println("[ART] Failed to commit album art file");
+        Logger::error("Art", "Failed to commit album art file");
+        return false;
+    }
+
+    Serial.printf("[ART] Saved %d bytes to %s
+", totalWritten, path.c_str());
     return true;
 }
 
@@ -88,7 +123,8 @@ void checkAndCacheAlbumArt(const String &albumId, JsonDocument &reply) {
     String path = albumArtPath(albumId);
 
     if (SDManager::exists(path.c_str())) {
-        Serial.printf("[ART] Already cached: %s\n", albumId.c_str());
+        Serial.printf("[ART] Already cached: %s
+", albumId.c_str());
         return;
     }
 
