@@ -30,7 +30,7 @@
  */
 
 #include <Arduino.h>
-#include <WiFi.h>
+// #include <WiFi.h>
 #include "driver/i2s.h"
 #include <Preferences.h>
 
@@ -38,40 +38,23 @@
 #include "mini/mini-setup-assistant.h" //contains functionality for the wavelet mini
 #endif
 
-#if defined(WAVELET_REGULAR)
-#include "regular/input/Buttons.h"
-#include "regular/audio/AudioManager.h"
-#include "regular/ble/BLEManager.h"
-#include "regular/core/Speaker.h"
-#include "BluetoothA2DPSink.h"
-#include "regular/storage/PreferencesManager.h"
+#ifdef WAVELET_REGULAR
+#include "regular/regular-setup-assistant.h" //contains functionality for the wavelet regular
 #endif
-
 
 #ifdef WAVELET_MAX
 #include "web/WebServer.h"
 #include "wifi/WiFiManager.h"
 #endif
 
-Preferences prefs;
-
-//Regular is quite cooked rn
-#ifdef WAVELET_REGULAR
-#include "Config.h"
-AudioManager audio(prefs);
-BluetoothA2DPSink a2dp_sink;
-#endif
+Preferences prefs; //Global preferences object
 
 // comment this line to disable debug
 #define DEBUG
 
-//uncomment this line to enable BatteryStats
-#define BATTERIES_CONNECTED
-
 #define MINI_FIRMWARE_VERSION "0.3.0"
 #define REGULAR_FIRMWARE_VERSION "0.1.0"
 #define MAX_FIRMWARE_VERSION "0.0.0"
-
 
 void setup() {
 
@@ -84,16 +67,6 @@ void setup() {
     // prefs.begin("app", false); // open once
     prefs.begin("wavelet", false);
 
-
-    #if defined(WAVELET_REGULAR)
-    pinMode(Config::BUZZER, OUTPUT);
-    pinMode(Config::PWR_BUTTON, INPUT_PULLUP);
-    pinMode(Config::MODE_BUTTON, INPUT_PULLUP);
-    pinMode(Config::PREVIOUS_BUTTON, INPUT_PULLUP);
-    pinMode(Config::NEXT_BUTTON, INPUT_PULLUP);
-    pinMode(Config::PAUSE_BUTTON, INPUT_PULLUP);
-    #endif
-
     #ifdef WAVELET_MINI
     initializeDisplay();
     startLED();
@@ -102,43 +75,29 @@ void setup() {
     startFeatures();
     #endif
 
+    #ifdef WAVELET_REGULAR
+
+    initializeGPIO();
+    initializeI2S();
+    startA2DP();
+    startOrCheckOnboarding();
+
     #ifdef DEBUG
-    // String mac_addr = WiFi.macAddress();
-    Serial.println(WiFi.macAddress());
+    playDebugBeep();
     #endif
 
-    #ifdef WAVELET_REGULAR
-    i2s_pin_config_t my_pins = {
-        .bck_io_num = 26,
-        .ws_io_num = 25,
-        .data_out_num = 4, //DIN
-        .data_in_num = I2S_PIN_NO_CHANGE
-    };
-
-    a2dp_sink.set_pin_config(my_pins);
-    a2dp_sink.set_on_connection_state_changed(on_connected);
-    a2dp_sink.set_auto_reconnect(false);
+    // playStartupSound();
     #endif
 
     #ifdef WAVELET_MAX
     getSongMetadata(); //achieve song info for the web ui
-    #endif
-
-    #ifdef WAVELET_REGULAR //update required
-    a2dp_sink.start("Wavelet");
-    #endif
-
-    #ifdef WAVELET_MAX
     a2dp_sink.start("Wavelet Max");
     #endif
 
-  
-    // audio.play_startup_sound();
 
     // int rememberedVolume = readRememberedVolume();
     // a2dp_sink.set_volume(rememberedVolume);
     // //i2s_set_clk(I2S_NUM_0, 44100, I2S_BITS_PER_SAMPLE_16BIT, I2S_CHANNEL_STEREO);
-    // audio.buzz(1000,1000);
 
     #ifdef WAVELET_MAX
     connectWiFi();
@@ -167,17 +126,9 @@ void loop() {
         handleSpotifyLoop();
     #endif
 
-    #if defined(WAVELET_REGULAR)
-
-    #ifdef DEBUG
-    int battery_level = readBatteryLevel();
-    Serial.println(battery_level);
-    #endif
-
-    update_battery();
-    handlePowerButton();
-    handlePreviousButton();
-    handleNextButton();
+    #ifdef WAVELET_REGULAR
+    handleButtons();
+    processBleSetup();
     #endif
 
 }

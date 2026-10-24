@@ -125,6 +125,9 @@ class Spotify {
   ///        Must be called before attempting authenticated API requests.
   void begin();
 
+  // Replace the refresh token at runtime after the app provisions it.
+  bool set_refresh_token(const char* token);
+
   /// @brief Handles incoming HTTP client requests required for OAuth authentication.
   ///        Should be called regularly inside the main loop.
   void handle_client();
@@ -614,7 +617,7 @@ class Spotify {
     char _client_secret[100] = "";
 
     /// @brief Current access token used for API requests.
-    char _access_token[400];
+    char _access_token[1024] = "";
 
     /// @brief Char to hold potential custom scopes.
     const char* _custom_scopes;

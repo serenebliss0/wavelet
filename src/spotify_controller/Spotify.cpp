@@ -3,6 +3,7 @@
 #include "album_art.h"
 #include "mini/MiniConfig.h"
 #include "mini/storage/logger.h"
+#include <esp_heap_caps.h>
 
 
 Spotify sp(CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN);
@@ -57,11 +58,22 @@ bool lastPlaying  = false;
 unsigned long lastUpdate = 0;
 const unsigned long SPOTIFY_UPDATE_INTERVAL = 5000;
 
+static void logSpotifyHeap(const char* stage) {
+    Serial.printf(
+        "[HEAP] %s internal free=%u largest=%u DMA free=%u largest=%u PSRAM free=%u\n",
+        stage,
+        (unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT),
+        (unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT),
+        (unsigned)heap_caps_get_free_size(MALLOC_CAP_DMA),
+        (unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_DMA),
+        (unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT)
+    );
+}
+
 //initialization and authorization
 void initializeSpotify() {
 
-    Serial.printf("[DEBUG] Free heap: %d, Largest free block: %d\n",
-        ESP.getFreeHeap(), heap_caps_get_largest_free_block(MALLOC_CAP_8BIT));
+    logSpotifyHeap("before auth");
 
     Serial.println("[SPOTIFY] Initializing...");
     initializeButtons();
@@ -71,21 +83,21 @@ void initializeSpotify() {
 
 bool authenticateSpotify() {
     Serial.println("[SPOTIFY] Starting authentication...");
-    sp.set_log_level(SPOTIFY_LOG_VERBOSE);
+    // Verbose logging includes the raw OAuth response, including bearer tokens.
+    sp.set_log_level(SPOTIFY_LOG_NONE);
 
     sp.begin();
     while (!sp.is_auth()) {
         sp.handle_client();
     }
 
-    Serial.printf("[SPOTIFY] Authenticated! Refresh token: %s\n",
-                sp.get_user_tokens().refresh_token);
+    Serial.println("[SPOTIFY] Authenticated.");
 
     return true;
 }
 
-
-void getCurrentlyPlaying() {
+//changed to return a string from void btw
+String getCurrentlyPlaying() {
     JsonDocument filter;
     filter["is_playing"] = true;
     filter["item"]["name"] = true;
@@ -96,16 +108,27 @@ void getCurrentlyPlaying() {
     response res = sp.get_currently_playing_track(filter);
 
     if (res.status_code == -1) {
-        Serial.println("[SPOTIFY] Connection dead, forcing reconnect...");
-        WiFi.disconnect();
-        delay(100);
-        WiFi.reconnect();
-        return; // skip parsing, try again next cycle
+        Serial.println("[SPOTIFY] Request failed; keeping WiFi connected for retry");
+        logSpotifyHeap("request failed");
+        return ""; // skip parsing, try again next cycle
     }
 
-    if (res.status_code != 200) return;
+    if (res.status_code == 204) {
+        lastPlaying = false;
+        lastTrack = "";
+        lastArtist = "";
+        return "Nothing Playing";
+    }
+    if (res.status_code != 200) return "";
+
+    bool playing = res.reply["is_playing"] | false;
+    if (!playing || res.reply["item"].isNull()) {
+        lastPlaying = false;
+        lastTrack = "";
+        lastArtist = "";
+        return "Nothing Playing";
+    }
     
-    bool playing = res.reply["is_playing"];
     String track = res.reply["item"]["name"].as<String>();
     String albumId = res.reply["item"]["album"]["id"].as<String>();
     
@@ -115,13 +138,16 @@ void getCurrentlyPlaying() {
         artist += a["name"].as<String>();
     }
     
-    checkAndCacheAlbumArt(albumId, res.reply); // new line
-    
     if (playing != lastPlaying || track != lastTrack || artist != lastArtist) {
         lastTrack = track;
         lastArtist = artist;
         lastPlaying = playing;
     }
+
+    // Song state is captured before the optional, potentially slow art fetch.
+    checkAndCacheAlbumArt(albumId, res.reply);
+
+    return track;
 }
 
 void pauseCurrentlyPlaying() {
@@ -194,11 +220,19 @@ static void handleButtons() {
 }
 
 //call this in main loop
-void updateSpotify() {
+//also changed to return string
+String updateSpotify() {
+    static String currentDisplay = "Nothing Playing";
+
     handleButtons();
 
     if (millis() - lastUpdate >= SPOTIFY_UPDATE_INTERVAL) {
         lastUpdate = millis();
-        getCurrentlyPlaying();
+        String result = getCurrentlyPlaying();
+        // An empty result means a transient request failure: retain the last
+        // known title instead of blanking it between polls.
+        if (!result.isEmpty()) currentDisplay = result;
     }
+
+    return currentDisplay;
 }

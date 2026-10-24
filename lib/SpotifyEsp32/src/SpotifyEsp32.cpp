@@ -67,6 +67,14 @@ Spotify::~Spotify(){
   SPOTIFY_LOGI(_TAG, "Object Destructed");
 }
 
+bool Spotify::set_refresh_token(const char* token) {
+  if (token == nullptr || token[0] == '\0' || strlen(token) >= sizeof(_refresh_token)) return false;
+  strncpy(_refresh_token, token, sizeof(_refresh_token) - 1);
+  _refresh_token[sizeof(_refresh_token) - 1] = '\0';
+  _no_credentials = false;
+  return true;
+}
+
 void Spotify::end(){
   delete this;
 }
@@ -408,7 +416,8 @@ bool Spotify::get_token() {
   JsonDocument response = process_response(header_data, filter);
   if(!response.isNull() && !response["access_token"].isNull()){
     reply = true;
-    strncpy(_access_token, response["access_token"].as<const char*>(), sizeof(_access_token));
+    strncpy(_access_token, response["access_token"].as<const char*>(), sizeof(_access_token) - 1);
+    _access_token[sizeof(_access_token) - 1] = '\0';
   }
   String str_response;
   serializeJson(response, str_response);

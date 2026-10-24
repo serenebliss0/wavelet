@@ -2,6 +2,10 @@
 
 #include "mini/mini-setup-assistant.h"
 #include "mini-ble/BLEManager.h"
+#include "mini/audio/volume_control.h"
+#include "mini/wavelet-mini-screens/src/ui/gesture_navigation.h"
+
+extern Preferences prefs;
 
 //Setting up display for MINI
 // TODO: Give each model its own module and free up main.cpp
@@ -93,9 +97,16 @@ String token = getOrCreateSetupToken();
 
 
 void initializeLVGL() {
-    //init LVGL UI and create screens
-    ui_init(); 
-    create_screens();
+    // ui_init() creates the screens before gesture handlers are attached.
+    ui_init();
+    miniVolumeInitialize();
+    miniVolumeBindUi();
+    gesture_navigation_init();
+    lv_timer_create(
+        [](lv_timer_t *) { mini_clock_update(); },
+        500,
+        nullptr
+    );
 
     //load the boot splash screen immediately after init
     lv_scr_load(objects.boot_splash);
@@ -167,9 +178,10 @@ void startOrCheckOnboarding() {
             objects.obj6,
             token.c_str()
         );
-
     } 
     else {
+        // Keep the same BLE control service available after onboarding.
+        initBLE("mini", "strawberry_pink");
         // Show default clock after boot splash
         lv_timer_create(
             [](lv_timer_t *timer) {
@@ -206,12 +218,15 @@ void initializeWiFi(){
 void startSpotify(){
     if (WiFi.status() == WL_CONNECTED) {
     //Gate features requiring wifi
+        String provisionedToken = prefs.getString("spotify_refresh", "");
+        if (!provisionedToken.isEmpty()) sp.set_refresh_token(provisionedToken.c_str());
         initializeSpotify();
         authenticateSpotify();
     }
 }
 
 void startFeatures(){
+    Battery::begin();
     initializeSD();
     initializeAudio();
     playBootChime();
@@ -222,9 +237,19 @@ void startFeatures(){
 }
 
 void handleSpotifyLoop(){
+    static String lastDisplayedTitle;
+
     if(setupDone){
         if(WiFi.status() == WL_CONNECTED){
-            updateSpotify();
+            String currentlyPlaying = updateSpotify();
+
+            if (currentlyPlaying != lastDisplayedTitle) {
+                lv_label_set_text(
+                    objects.currently_playing,
+                    currentlyPlaying.c_str()
+                );
+                lastDisplayedTitle = currentlyPlaying;
+            }
         }
     }
 }

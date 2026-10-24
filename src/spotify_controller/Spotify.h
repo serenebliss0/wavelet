@@ -17,10 +17,10 @@ void initializeSpotify();
 
 bool authenticateSpotify();
 
-void updateSpotify();
+String updateSpotify();
 
 //Helper functions
-void getCurrentlyPlaying();
+String getCurrentlyPlaying();
 
 void pauseCurrentlyPlaying();
 

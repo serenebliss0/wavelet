@@ -1,6 +1,6 @@
 {
   "navigation": {
-    "selectedUserPageObject": "[wavelet-mini-screens.eez-project]:/userPages/2",
+    "selectedUserPageObject": "[wavelet-mini-screens.eez-project]:/userPages/5",
     "selectedGlobalVariableObject": "[wavelet-mini-screens.eez-project]:/variables/globalVariables/1",
     "selectedThemeObject": "[wavelet-mini-screens.eez-project]:/themes/1",
     "selectedThemeColorObject": "[wavelet-mini-screens.eez-project]:/colors/11",
@@ -28,7 +28,7 @@
           },
           {
             "type": "border",
-            "selected": 5,
+            "selected": 3,
             "size": 240,
             "location": "right",
             "children": [
@@ -188,7 +188,8 @@
                       "enableClose": false,
                       "icon": "svg:hierarchy"
                     }
-                  ]
+                  ],
+                  "active": true
                 },
                 {
                   "type": "tabset",
@@ -218,10 +219,10 @@
                 {
                   "type": "tab",
                   "id": "#c3850bdf-8a15-4281-9e01-5f4df228d2b4",
-                  "name": "Onboarding1",
+                  "name": "DefaultClock",
                   "component": "editor",
                   "config": {
-                    "objectPath": "[wavelet-mini-screens.eez-project]:/userPages/2",
+                    "objectPath": "[wavelet-mini-screens.eez-project]:/userPages/5",
                     "permanent": false
                   },
                   "icon": "svg:page"
@@ -249,8 +250,7 @@
                   },
                   "icon": "svg:page"
                 }
-              ],
-              "active": true
+              ]
             },
             {
               "type": "row",
@@ -1128,10 +1128,10 @@
       },
       "transform": {
         "translate": {
-          "x": -176.48336226707252,
+          "x": -265.2144117099038,
           "y": -147.22295866365673
         },
-        "scale": 0.75
+        "scale": 1.75
       },
       "timeline": {
         "isEditorActive": false,
@@ -1155,10 +1155,10 @@
       },
       "transform": {
         "translate": {
-          "x": -178.5325805700155,
+          "x": -272.74085528709577,
           "y": -242.70261560716992
         },
-        "scale": 0.75
+        "scale": 1.75
       },
       "timeline": {
         "isEditorActive": false,
@@ -1179,10 +1179,10 @@
       },
       "transform": {
         "translate": {
-          "x": -212.62512856855358,
-          "y": -236.52473220557883
+          "x": -284.96015847693445,
+          "y": -229.36648995902814
         },
-        "scale": 0.75
+        "scale": 1.75
       },
       "timeline": {
         "isEditorActive": false,
@@ -1205,7 +1205,7 @@
           "x": -169.64539668009309,
           "y": -247.65903898923324
         },
-        "scale": 1.25
+        "scale": 1.75
       },
       "timeline": {
         "isEditorActive": false,
@@ -1229,7 +1229,7 @@
           "x": -246.7246683024967,
           "y": -367.3803347336203
         },
-        "scale": 1.25
+        "scale": 1.75
       },
       "timeline": {
         "isEditorActive": false,
@@ -1242,15 +1242,18 @@
       "selectionFront": {},
       "selectionBack": {
         "0": {
+          "10": {
+            "$selected": true
+          },
           "12": {}
         }
       },
       "transform": {
         "translate": {
-          "x": -255.62902691826642,
-          "y": -160.05763205980347
+          "x": -218.38389588913248,
+          "y": -220.30711007654094
         },
-        "scale": 1
+        "scale": 1.75
       },
       "timeline": {
         "isEditorActive": false,
@@ -1267,7 +1270,7 @@
           "x": -236.80399169921873,
           "y": -142.25298767089845
         },
-        "scale": 1
+        "scale": 1.75
       },
       "timeline": {
         "isEditorActive": false,
@@ -1298,7 +1301,7 @@
   ],
   "showInactiveFlowsInDebugger": true,
   "globalFlowZoom": true,
-  "flowZoom": 0.75,
+  "flowZoom": 1.75,
   "implementationLanguage": "C",
   "openDialogDefaultPath": "C:\\Users\\Semire\\Downloads\\My Programming Journey 3\\arduino-practice\\projects\\07-esp32\\esp32-smart-speaker\\assets\\volume-icon -statusbar.png"
 }
