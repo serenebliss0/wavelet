@@ -3,8 +3,8 @@
 #include <Arduino.h>
 #include "BluetoothA2DPSink.h"
 
-#include "audio/AudioManager.h"
-#include "core/Speaker.h"
+#include "regular/audio/AudioManager.h"
+#include "regular/core/Speaker.h"
 #include "Config.h"
 
 #define DEBUG
@@ -71,18 +71,4 @@ void handleNextButton() {
     a2dp_sink.next();
   }
   wasPressed = isPressed;
-}
-
-void checkModeButton() {
-  static bool lastButtonState = HIGH; // assuming pull-up
-  bool buttonState = digitalRead(Config::MODE_BUTTON);
-
-  if (lastButtonState == HIGH && buttonState == LOW) { // button pressed
-      currentMode = static_cast<SpeakerMode>((currentMode + 1) % 4); // cycles 0->1->2->3->0
-      Serial.print("Mode changed to: ");
-      Serial.println(currentMode);
-      onModeChange(currentMode);
-  }
-
-  lastButtonState = buttonState;
 }

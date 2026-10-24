@@ -6,9 +6,9 @@ extern Preferences prefs;
 
 int readRememberedVolume() {
   //read saved preferences
-  prefs.begin("volume", true); // read-only
+  prefs.begin("wavelet", true); // read-only
   int rememberedVolume = prefs.getInt("volume", 50);
-  prefs.end();
+  // prefs.end();
 
   return rememberedVolume;
 }

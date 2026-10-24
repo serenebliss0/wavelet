@@ -15,7 +15,7 @@
 #ifdef LV_LVGL_H_INCLUDE_SIMPLE
     #include "lvgl.h"
 #else
-    #include "lvlvgl.h"
+    #include "lvgl.h"
 #endif
 
 #ifndef UI_FONT_NUNITO_18_BOLD

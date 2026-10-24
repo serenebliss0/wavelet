@@ -10,6 +10,7 @@
 #define CHAR_WIFI_PASS_UUID     "beb5483e-36e1-4688-b7f5-ea07361b26ab"
 #define CHAR_STATUS_UUID        "beb5483e-36e1-4688-b7f5-ea07361b26ac"
 #define CHAR_DEVICE_NAME_UUID   "beb5483e-36e1-4688-b7f5-ea07361b26ad"
+#define CHAR_SPOTIFY_TOKEN_UUID "beb5483e-36e1-4688-b7f5-ea07361b26ae"
 
 extern bool deviceConnected;
 extern bool isSetupComplete;

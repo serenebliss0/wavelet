@@ -82,6 +82,10 @@ static bool downloadAlbumArt(const String &url, const String &albumId) {
 }
 
 void checkAndCacheAlbumArt(const String &albumId, JsonDocument &reply) {
+    // Album art is optional. Do not issue extra HTTPS requests or touch files
+    // when the SD card failed to mount; playback metadata remains independent.
+    if (!SDManager::mounted()) return;
+
     if (albumId == lastAlbumId) return;
     lastAlbumId = albumId;
 

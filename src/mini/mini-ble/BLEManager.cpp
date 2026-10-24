@@ -5,8 +5,20 @@
 #include <BLE2902.h>
 #include <Preferences.h>
 #include <WiFi.h>
+#include "esp_bt.h"
+#include "esp_gap_ble_api.h"
 #include "mini/storage/logger.h"
+#include "mini/audio/volume_control.h"
 #include "lvgl.h"
+#include "mini/battery/battery.h"
+#include "mini/wavelet-mini-screens/src/ui/screens.h"
+#include "spotify_controller/Spotify.h"
+
+void enableShuffle();
+void disableShuffle();
+void setRepeatOff();
+void setRepeatTrack();
+void setRepeatContext();
 
 // UUIDs
 #define WAVELET_SERVICE_UUID    "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
@@ -16,12 +28,15 @@
 #define CHAR_WIFI_PASS_UUID     "beb5483e-36e1-4688-b7f5-ea07361b26ab"
 #define CHAR_STATUS_UUID        "beb5483e-36e1-4688-b7f5-ea07361b26ac"
 #define CHAR_DEVICE_NAME_UUID   "beb5483e-36e1-4688-b7f5-ea07361b26ad"
+#define CHAR_SPOTIFY_TOKEN_UUID "beb5483e-36e1-4688-b7f5-ea07361b26ae"
 
 //Global Vars
 extern Preferences prefs;
 BLEServer*         pServer     = nullptr;
 BLECharacteristic* pStatus     = nullptr;
 BLECharacteristic* pDeviceInfo = nullptr;
+BLECharacteristic* pSpotifyToken = nullptr;
+static esp_ble_adv_params_t reconnectAdvertisingParams = {};
 
 bool deviceConnected = false;
 // bool isSetupComplete = false;
@@ -37,6 +52,7 @@ const unsigned long WIFI_TIMEOUT = 10000;
 String receivedSSID     = "";
 String receivedPassword = "";
 String receivedName     = "";
+String pendingControlCommand = "";
 
 void setStatus(const char* status) {
     Serial.printf("[STATUS] %s\n", status);
@@ -98,7 +114,7 @@ void saveSetupComplete() {
 
 void syncTimeWithNTP() {
     Serial.println("[TIME] Waiting for NTP sync...");
-    configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+    configTzTime("WAT-1", "pool.ntp.org", "time.nist.gov");
 
     time_t now = time(nullptr);
     unsigned long startMs = millis();
@@ -224,7 +240,13 @@ void syncTimeWithNTP() {
             "[BLE] Client disconnected — restarting advertising"
         );
 
-        BLEDevice::startAdvertising();
+        // The payload was configured once in initBLE(). Restart only the
+        // controller advertising state; BLEAdvertising::start() reconfigures
+        // advertising + scan response and allocates again on every reconnect.
+        esp_err_t result = esp_ble_gap_start_advertising(&reconnectAdvertisingParams);
+        if (result != ESP_OK) {
+            Serial.printf("[BLE] Advertising restart failed: %d\n", result);
+        }
     }
 };
 
@@ -283,6 +305,10 @@ class CommandCallback : public BLECharacteristicCallbacks {
             return;
         }
 
+        // Execute controls from processBleSetup(), never from the BLE task.
+        pendingControlCommand = value;
+        return;
+
         Serial.printf(
             "[BLE] Unknown command: %s\n",
             value.c_str()
@@ -336,7 +362,23 @@ class DeviceNameCallback : public BLECharacteristicCallbacks {
     }
 };
 
+class SpotifyTokenCallback : public BLECharacteristicCallbacks {
+    void onWrite(BLECharacteristic* characteristic) override {
+        String token = characteristic->getValue().c_str();
+        if (token.isEmpty() || token.length() >= 300) {
+            setStatus("ERROR:SPOTIFY_TOKEN_INVALID");
+            return;
+        }
+        prefs.putString("spotify_refresh", token);
+        setStatus("OK:SPOTIFY_TOKEN_SAVED_REBOOT_REQUIRED");
+    }
+};
+
 void initBLE(String deviceModel, String deviceColor) {
+
+    // Mini uses BLE only. Releasing the unused Classic BT pool leaves more
+    // internal RAM for BLE, Wi-Fi TLS, and LVGL on the ESP32-S3.
+    esp_bt_controller_mem_release(ESP_BT_MODE_CLASSIC_BT);
 
     String advertisingName = "WVL-" + deviceModel;
 
@@ -370,7 +412,7 @@ void initBLE(String deviceModel, String deviceColor) {
         deviceModel +
         "\",\"color\":\"" +
         deviceColor +
-        "\",\"fw\":\"1.0.0\"}";
+        "\",\"protocolVersion\":1,\"fw\":\"1.0.0\",\"capabilities\":[\"play_pause\",\"volume\",\"theme\",\"repeat\",\"shuffle\",\"phone_time\",\"battery\",\"wifi_rssi\",\"factory_reset\",\"spotify\"]}";
 
     pDeviceInfo->setValue(
         info.c_str()
@@ -431,6 +473,12 @@ void initBLE(String deviceModel, String deviceColor) {
         new DeviceNameCallback()
     );
 
+    pSpotifyToken = pService->createCharacteristic(
+        CHAR_SPOTIFY_TOKEN_UUID,
+        BLECharacteristic::PROPERTY_WRITE
+    );
+    pSpotifyToken->setCallbacks(new SpotifyTokenCallback());
+
     //start service
     pService->start();
 
@@ -445,6 +493,15 @@ void initBLE(String deviceModel, String deviceColor) {
 
     pAdvertising->setMinPreferred(0x06);
     pAdvertising->setMinPreferred(0x12);
+
+    reconnectAdvertisingParams.adv_int_min = 0x20;
+    reconnectAdvertisingParams.adv_int_max = 0x40;
+    reconnectAdvertisingParams.adv_type = ADV_TYPE_IND;
+    reconnectAdvertisingParams.own_addr_type = BLE_ADDR_TYPE_PUBLIC;
+    reconnectAdvertisingParams.peer_addr_type = BLE_ADDR_TYPE_PUBLIC;
+    memset(reconnectAdvertisingParams.peer_addr, 0, sizeof(reconnectAdvertisingParams.peer_addr));
+    reconnectAdvertisingParams.channel_map = ADV_CHNL_ALL;
+    reconnectAdvertisingParams.adv_filter_policy = ADV_FILTER_ALLOW_SCAN_ANY_CON_ANY;
 
     BLEDevice::startAdvertising();
 
@@ -472,6 +529,49 @@ void beginSetupMode(
 }
 
 void processBleSetup() {
+
+    if (!pendingControlCommand.isEmpty()) {
+        String command = pendingControlCommand;
+        pendingControlCommand = "";
+        if (command == "PLAY_PAUSE") {
+            pauseCurrentlyPlaying();
+            setStatus("OK:PLAY_PAUSE");
+        } else if (command.startsWith("SET_VOLUME:")) {
+            int volume = command.substring(11).toInt();
+            if (volume >= 0 && volume <= 100) { miniVolumeSetPercent(volume); setStatus("OK:VOLUME"); }
+            else setStatus("ERROR:VOLUME_RANGE");
+        } else if (command == "SET_THEME:DARK") {
+            change_color_theme(0); setStatus("OK:THEME");
+        } else if (command == "SET_THEME:LIGHT") {
+            change_color_theme(1); setStatus("OK:THEME");
+        } else if (command == "SET_SHUFFLE:ON") {
+            enableShuffle(); setStatus("OK:SHUFFLE");
+        } else if (command == "SET_SHUFFLE:OFF") {
+            disableShuffle(); setStatus("OK:SHUFFLE");
+        } else if (command == "SET_REPEAT:OFF") {
+            setRepeatOff(); setStatus("OK:REPEAT");
+        } else if (command == "SET_REPEAT:TRACK") {
+            setRepeatTrack(); setStatus("OK:REPEAT");
+        } else if (command == "SET_REPEAT:CONTEXT") {
+            setRepeatContext(); setStatus("OK:REPEAT");
+        } else if (command.startsWith("SYNC_TIME:")) {
+            long long epoch = command.substring(10).toInt();
+            if (epoch > 1700000000LL) { struct timeval tv = {(time_t)epoch, 0}; settimeofday(&tv, nullptr); setStatus("OK:TIME"); }
+            else setStatus("ERROR:TIME_RANGE");
+        } else if (command == "GET_STATUS") {
+            Battery::update();
+            String state = String("{\"model\":\"mini\",\"wifi\":") + (WiFi.status() == WL_CONNECTED ? "true" : "false") +
+                ",\"rssi\":" + (WiFi.status() == WL_CONNECTED ? String(WiFi.RSSI()) : "null") +
+                ",\"battery\":" + String(Battery::percentage()) + ",\"playing\":" + (lastPlaying ? "true" : "false") + "}";
+            setStatus(state.c_str());
+        } else if (command == "FACTORY_RESET:CONFIRM") {
+            prefs.clear(); setStatus("RESETTING"); delay(250); ESP.restart();
+        } else if (command == "FACTORY_RESET") {
+            setStatus("ERROR:CONFIRM_REQUIRED");
+        } else {
+            setStatus("ERROR:UNKNOWN_COMMAND");
+        }
+    }
 
     if (wifiConnectionRequested) {
 

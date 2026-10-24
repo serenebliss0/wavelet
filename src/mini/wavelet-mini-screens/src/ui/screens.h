@@ -18,7 +18,10 @@ enum ScreensEnum {
     SCREEN_ID_ONBOARDING3 = 5,
     SCREEN_ID_DEFAULT_CLOCK = 6,
     SCREEN_ID_VOLUME_PANE = 7,
-    _SCREEN_ID_LAST = 7
+    SCREEN_ID_QUICK_SETTINGS = 8,
+    SCREEN_ID_ALWAYS_ON_CLOCK = 9,
+    SCREEN_ID_MEDIA_PANE = 10,
+    _SCREEN_ID_LAST = 10
 };
 
 typedef struct _objects_t {
@@ -29,6 +32,9 @@ typedef struct _objects_t {
     lv_obj_t *onboarding3;
     lv_obj_t *default_clock;
     lv_obj_t *volume_pane;
+    lv_obj_t *quick_settings;
+    lv_obj_t *always_on_clock;
+    lv_obj_t *media_pane;
     lv_obj_t *wavelet_log;
     lv_obj_t *obj0;
     lv_obj_t *obj1;
@@ -50,9 +56,11 @@ typedef struct _objects_t {
     lv_obj_t *obj17;
     lv_obj_t *obj18;
     lv_obj_t *obj19;
+    lv_obj_t *currently_playing;
     lv_obj_t *wallpaper_image;
     lv_obj_t *obj20;
     lv_obj_t *obj21;
+    lv_obj_t *volume_slider;
 } objects_t;
 
 extern objects_t objects;
@@ -77,6 +85,15 @@ void tick_screen_default_clock();
 
 void create_screen_volume_pane();
 void tick_screen_volume_pane();
+
+void create_screen_quick_settings();
+void tick_screen_quick_settings();
+
+void create_screen_always_on_clock();
+void tick_screen_always_on_clock();
+
+void create_screen_media_pane();
+void tick_screen_media_pane();
 
 void tick_screen_by_id(enum ScreensEnum screenId);
 void tick_screen(int screen_index);

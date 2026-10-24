@@ -1,26 +1,10 @@
-#include "AudioManager.h"
-#include "BluetoothA2DPSink.h"
-#include "driver/i2s.h"
-#include "Config.h"
-#define DEBUG
-
-extern BluetoothA2DPSink a2dp_sink;
-
-int volumeLevel = 0;
-int rememberedVolume = 0;
-
-AudioManager::AudioManager(Preferences& prefsRef)
-    : prefs(prefsRef) {}
-
-
-void AudioManager::buzz(int freq, int duration) {
-    tone(Config::BUZZER, freq, duration); // play tone
-    delay(duration);                  // wait
-    noTone(Config::BUZZER);               // stop
-}
+#pragma once
+#include <Arduino.h>
 
 // array size is 19842
 // A never ending midnight sunnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+//Connected sounds
+//Plays whenever wavelet connects to a device
 static const byte connected_sound[] PROGMEM  = {
   0x52, 0x49, 0x46, 0x46, 0x7a, 0x4d, 0x00, 0x00, 0x57, 0x41, 0x56, 0x45, 0x66, 0x6d, 0x74, 0x20, 
   0x10, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x11, 0x2b, 0x00, 0x00, 0x22, 0x56, 0x00, 0x00, 
@@ -4118,6 +4102,8 @@ static const byte shutdown_sound[] PROGMEM  = {
 };
 
 // array size is 30914
+//Startup Sound
+//Plays everytime the speaker boots
 static const byte startup_sound[] PROGMEM  = {
   0x52, 0x49, 0x46, 0x46, 0xba, 0x78, 0x00, 0x00, 0x57, 0x41, 0x56, 0x45, 0x66, 0x6d, 0x74, 0x20, 
   0x10, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x11, 0x2b, 0x00, 0x00, 0x22, 0x56, 0x00, 0x00, 
@@ -6053,74 +6039,3 @@ static const byte startup_sound[] PROGMEM  = {
   0x5e, 0x00, 0x40, 0x00, 0x10, 0x00, 0xd6, 0xff, 0x9f, 0xff, 0x7c, 0xff, 0x79, 0xff, 0x93, 0xff, 
   0xc5, 0xff
 };
-
-
-void AudioManager::play_connected_sound() {
-  // reconfigure I2S for the WAV's specs
-  i2s_set_clk(I2S_NUM_0, 11025, I2S_BITS_PER_SAMPLE_16BIT, I2S_CHANNEL_MONO);
-
-  const uint8_t* pcm_data = connected_sound + 44;
-  size_t pcm_len = sizeof(connected_sound) - 44;
-
-  size_t bytes_written = 0;
-  i2s_write(I2S_NUM_0, pcm_data, pcm_len, &bytes_written, portMAX_DELAY);
-
-  // restore I2S for A2DP (44100 stereo)
-  i2s_set_clk(I2S_NUM_0, 44100, I2S_BITS_PER_SAMPLE_16BIT, I2S_CHANNEL_STEREO);
-
-  #ifdef DEBUG
-  Serial.println("Conencted sound was played");
-  #endif
-}
-
-void AudioManager::play_shutdown_sound() {
-  i2s_set_clk(I2S_NUM_0, 11025, I2S_BITS_PER_SAMPLE_16BIT, I2S_CHANNEL_MONO);
-
-  const uint8_t* pcm_data = shutdown_sound + 44;
-  size_t pcm_len = sizeof(shutdown_sound) - 44;
-
-  size_t bytes_written = 0;
-  i2s_write(I2S_NUM_0, pcm_data, pcm_len, &bytes_written, portMAX_DELAY);
-
-  i2s_set_clk(I2S_NUM_0, 44100, I2S_BITS_PER_SAMPLE_16BIT, I2S_CHANNEL_STEREO);
-
-  #ifdef DEBUG
-  Serial.println("Shutdown sound was played");
-  #endif
-}
-
-void AudioManager::play_startup_sound() {
-  i2s_set_clk(I2S_NUM_0, 11025, I2S_BITS_PER_SAMPLE_16BIT, I2S_CHANNEL_MONO);
-
-  const uint8_t* pcm_data = startup_sound + 44;
-  size_t pcm_len = sizeof(startup_sound) - 44;
-
-  size_t bytes_written = 0;
-  i2s_write(I2S_NUM_0, pcm_data, pcm_len, &bytes_written, portMAX_DELAY);
-
-  i2s_set_clk(I2S_NUM_0, 44100, I2S_BITS_PER_SAMPLE_16BIT, I2S_CHANNEL_STEREO);
-
-  #ifdef DEBUG
-  Serial.println("Startup sound was played");
-  #endif
-}
-
-void AudioManager::updateVolume()
-{
-    volumeLevel = analogRead(Config::VOLUME_POT);
-    int volume = map(volumeLevel, 0, 4095, 0, 127); // map to 0–127
-    if (abs(volume - LAST_VOLUME) >= Config::VOL_THRESHOLD) {
-    a2dp_sink.set_volume(volume);
-    LAST_VOLUME = volume;
-
-    prefs.begin("volume", false);
-    rememberedVolume = prefs.putInt("volume", volume);
-    prefs.end();
-}
-  delay(50);
-
-  #ifdef DEBUG
-    //Serial.print("Potentiometer value at: ");
-    //Serial.println(volumeLevel);
-  #endif
-}

@@ -1,5 +1,6 @@
 #include "mini-audio-manager.h"
 #include "drivers/Es8311Wire.h"
+#include "volume_control.h"
 #include "mini/storage/logger.h"
 #include "mini/MiniConfig.h"
 #include "mini/neopixel/NeoPixel.h"
@@ -37,7 +38,6 @@ namespace
     constexpr size_t   kMaxPathLen        = 96;
     constexpr size_t   kStreamChunkBytes  = 1024;
     constexpr uint32_t kDefaultSampleRate = 44100;
-    constexpr int kDefaultVolume    = 80; //keep volume between 70-80%
 
     struct PlayRequest
     {
@@ -190,7 +190,7 @@ bool AudioManager::begin(bool initializeI2CBus)
         return false;
     }
 
-    codec.volumeSet(kDefaultVolume);
+    codec.volumeSet(miniVolumeCodecLevel());
     codecReady = true;
 
     playQueue = xQueueCreate(4, sizeof(PlayRequest));

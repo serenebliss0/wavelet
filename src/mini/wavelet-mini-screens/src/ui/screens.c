@@ -12,8 +12,8 @@
 
 objects_t objects;
 
-static const char *screen_names[] = { "BootSplash", "InitialQRPage", "Onboarding1", "Onboarding2", "Onboarding3", "DefaultClock", "VolumePane" };
-static const char *object_names[] = { "boot_splash", "initial_qr_page", "onboarding1", "onboarding2", "onboarding3", "default_clock", "volume_pane", "wavelet_log", "obj0", "obj1", "obj2", "obj3", "obj4", "obj5", "obj6", "obj7", "obj8", "obj9", "obj10", "obj11", "obj12", "obj13", "obj14", "obj15", "obj16", "obj17", "obj18", "obj19", "wallpaper_image", "obj20", "obj21" };
+static const char *screen_names[] = { "BootSplash", "InitialQRPage", "Onboarding1", "Onboarding2", "Onboarding3", "DefaultClock", "VolumePane", "QuickSettings", "AlwaysOnClock", "MediaPane" };
+static const char *object_names[] = { "boot_splash", "initial_qr_page", "onboarding1", "onboarding2", "onboarding3", "default_clock", "volume_pane", "quick_settings", "always_on_clock", "media_pane", "wavelet_log", "obj0", "obj1", "obj2", "obj3", "obj4", "obj5", "obj6", "obj7", "obj8", "obj9", "obj10", "obj11", "obj12", "obj13", "obj14", "obj15", "obj16", "obj17", "obj18", "obj19", "currently_playing", "wallpaper_image", "obj20", "obj21", "volume_slider" };
 
 //
 // Event handlers
@@ -428,6 +428,7 @@ void create_screen_default_clock() {
     lv_obj_set_pos(obj, 0, 0);
     lv_obj_set_size(obj, 320, 240);
     lv_obj_set_style_bg_color(obj, lv_color_hex(theme_colors[eez_flow_get_selected_theme_index()][0]), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
     {
         lv_obj_t *parent_obj = obj;
         {
@@ -472,7 +473,7 @@ void create_screen_default_clock() {
         }
         {
             lv_obj_t *obj = lv_label_create(parent_obj);
-            lv_obj_set_pos(obj, 57, 94);
+            lv_obj_set_pos(obj, 57, 95);
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
             lv_obj_set_style_text_font(obj, &lv_font_montserrat_48, LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_label_set_text_static(obj, "hh");
@@ -515,13 +516,19 @@ void create_screen_default_clock() {
             lv_obj_set_style_border_color(obj, lv_color_hex(theme_colors[eez_flow_get_selected_theme_index()][3]), LV_PART_MAIN | LV_STATE_DEFAULT);
         }
         {
+            // currentlyPlaying
             lv_obj_t *obj = lv_label_create(parent_obj);
-            lv_obj_set_pos(obj, 99, 211);
-            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            objects.currently_playing = obj;
+            lv_obj_set_pos(obj, 92, 211);
+            lv_obj_set_size(obj, 137, 15);
             lv_label_set_long_mode(obj, LV_LABEL_LONG_SCROLL);
+            lv_obj_set_scrollbar_mode(obj, LV_SCROLLBAR_MODE_AUTO);
+            lv_obj_set_scroll_dir(obj, LV_DIR_LEFT);
+            lv_obj_set_scroll_snap_x(obj, LV_SCROLL_SNAP_START);
             lv_obj_set_style_align(obj, LV_ALIGN_DEFAULT, LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_obj_set_style_text_font(obj, &lv_font_montserrat_12, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_label_set_text_static(obj, "This love is so super");
+            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_label_set_text_static(obj, "This love is so super duper hello");
         }
         {
             // wallpaperImage
@@ -573,12 +580,102 @@ void create_screen_volume_pane() {
     lv_obj_set_pos(obj, 0, 0);
     lv_obj_set_size(obj, 320, 240);
     lv_obj_set_style_bg_color(obj, lv_color_hex(theme_colors[eez_flow_get_selected_theme_index()][0]), LV_PART_MAIN | LV_STATE_DEFAULT);
+    {
+        lv_obj_t *parent_obj = obj;
+        {
+            // Volume Slider
+            lv_obj_t *obj = lv_slider_create(parent_obj);
+            objects.volume_slider = obj;
+            lv_obj_set_pos(obj, 37, 98);
+            lv_obj_set_size(obj, 246, 44);
+            lv_slider_set_range(obj, 70, 80);
+            lv_slider_set_value(obj, 75, LV_ANIM_ON);
+            lv_obj_set_style_bg_color(obj, lv_color_hex(theme_colors[eez_flow_get_selected_theme_index()][2]), LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_bg_opa(obj, 100, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_radius(obj, 32768, LV_PART_MAIN | LV_STATE_DEFAULT);
+        }
+    }
     
     tick_screen_volume_pane();
 }
 
 void tick_screen_volume_pane() {
     void *flowState = getFlowState(0, 6);
+    (void)flowState;
+}
+
+void create_screen_quick_settings() {
+    void *flowState = getFlowState(0, 7);
+    (void)flowState;
+    lv_obj_t *obj = lv_obj_create(0);
+    objects.quick_settings = obj;
+    lv_obj_set_pos(obj, 0, 0);
+    lv_obj_set_size(obj, 320, 240);
+    {
+        lv_obj_t *parent_obj = obj;
+        {
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            lv_obj_set_pos(obj, 77, 112);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_label_set_text_static(obj, "Quick settings go here");
+        }
+    }
+    
+    tick_screen_quick_settings();
+}
+
+void tick_screen_quick_settings() {
+    void *flowState = getFlowState(0, 7);
+    (void)flowState;
+}
+
+void create_screen_always_on_clock() {
+    void *flowState = getFlowState(0, 8);
+    (void)flowState;
+    lv_obj_t *obj = lv_obj_create(0);
+    objects.always_on_clock = obj;
+    lv_obj_set_pos(obj, 0, 0);
+    lv_obj_set_size(obj, 320, 240);
+    {
+        lv_obj_t *parent_obj = obj;
+        {
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            lv_obj_set_pos(obj, 58, 112);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_label_set_text_static(obj, "Welcome to always on clock");
+        }
+    }
+    
+    tick_screen_always_on_clock();
+}
+
+void tick_screen_always_on_clock() {
+    void *flowState = getFlowState(0, 8);
+    (void)flowState;
+}
+
+void create_screen_media_pane() {
+    void *flowState = getFlowState(0, 9);
+    (void)flowState;
+    lv_obj_t *obj = lv_obj_create(0);
+    objects.media_pane = obj;
+    lv_obj_set_pos(obj, 0, 0);
+    lv_obj_set_size(obj, 320, 240);
+    {
+        lv_obj_t *parent_obj = obj;
+        {
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            lv_obj_set_pos(obj, 73, 112);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_label_set_text_static(obj, "Now playing something");
+        }
+    }
+    
+    tick_screen_media_pane();
+}
+
+void tick_screen_media_pane() {
+    void *flowState = getFlowState(0, 9);
     (void)flowState;
 }
 
@@ -591,9 +688,12 @@ tick_screen_func_t tick_screen_funcs[] = {
     tick_screen_onboarding3,
     tick_screen_default_clock,
     tick_screen_volume_pane,
+    tick_screen_quick_settings,
+    tick_screen_always_on_clock,
+    tick_screen_media_pane,
 };
 void tick_screen(int screen_index) {
-    if (screen_index >= 0 && screen_index < 7) {
+    if (screen_index >= 0 && screen_index < 10) {
         tick_screen_funcs[screen_index]();
     }
 }
@@ -721,6 +821,7 @@ void change_color_theme(uint32_t theme_index) {
     }
     {
         lv_obj_set_style_bg_color(objects.volume_pane, lv_color_hex(theme_colors[theme_index][0]), LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_bg_color(objects.volume_slider, lv_color_hex(theme_colors[theme_index][2]), LV_PART_MAIN | LV_STATE_DEFAULT);
     }
     lv_obj_invalidate(objects.boot_splash);
     lv_obj_invalidate(objects.initial_qr_page);
@@ -729,6 +830,9 @@ void change_color_theme(uint32_t theme_index) {
     lv_obj_invalidate(objects.onboarding3);
     lv_obj_invalidate(objects.default_clock);
     lv_obj_invalidate(objects.volume_pane);
+    lv_obj_invalidate(objects.quick_settings);
+    lv_obj_invalidate(objects.always_on_clock);
+    lv_obj_invalidate(objects.media_pane);
 }
 static const char *theme_names[] = { "Dark Mode", "Light Mode" };
 uint32_t theme_colors[2][13] = {
@@ -763,4 +867,7 @@ void create_screens() {
     create_screen_onboarding3();
     create_screen_default_clock();
     create_screen_volume_pane();
+    create_screen_quick_settings();
+    create_screen_always_on_clock();
+    create_screen_media_pane();
 }
