@@ -7,7 +7,7 @@
     "selectedFontObject": "[wavelet-mini-screens.eez-project]:/fonts/3",
     "selectedBitmapObject": "[wavelet-mini-screens.eez-project]:/bitmaps/8",
     "subnavigationSelectedItems": {
-      "variables-tab/sub-navigation/selected-item": "Actions"
+      "variables-tab/sub-navigation/selected-item": "Global"
     }
   },
   "layoutModel": {
@@ -28,6 +28,7 @@
           },
           {
             "type": "border",
+            "selected": 3,
             "selected": 3,
             "size": 240,
             "location": "right",
@@ -145,7 +146,7 @@
                 {
                   "type": "tabset",
                   "id": "#e9f6d490-5e84-41f5-8007-65de01dc8d28",
-                  "weight": 1,
+                  "weight": 1.0653753026634383,
                   "enableClose": false,
                   "children": [
                     {
@@ -177,7 +178,7 @@
                 {
                   "type": "tabset",
                   "id": "#3150a01a-f8d9-4cc4-be2c-a76f8e5214b4",
-                  "weight": 1,
+                  "weight": 0.9346246973365617,
                   "enableClose": false,
                   "children": [
                     {
@@ -1129,6 +1130,7 @@
       "transform": {
         "translate": {
           "x": -265.2144117099038,
+          "x": -265.2144117099038,
           "y": -147.22295866365673
         },
         "scale": 1.75
@@ -1156,6 +1158,7 @@
       "transform": {
         "translate": {
           "x": -272.74085528709577,
+          "x": -272.74085528709577,
           "y": -242.70261560716992
         },
         "scale": 1.75
@@ -1181,7 +1184,10 @@
         "translate": {
           "x": -284.96015847693445,
           "y": -229.36648995902814
+          "x": -284.96015847693445,
+          "y": -229.36648995902814
         },
+        "scale": 1.75
         "scale": 1.75
       },
       "timeline": {
@@ -1206,6 +1212,7 @@
           "y": -247.65903898923324
         },
         "scale": 1.75
+        "scale": 1.75
       },
       "timeline": {
         "isEditorActive": false,
@@ -1229,6 +1236,7 @@
           "x": -246.7246683024967,
           "y": -367.3803347336203
         },
+        "scale": 1.75
         "scale": 1.75
       },
       "timeline": {
@@ -1264,11 +1272,76 @@
     },
     "[wavelet-mini-screens.eez-project]:/userPages/6[flow-state]": {
       "selectionFront": {},
-      "selectionBack": {},
+      "selectionBack": {
+        "0": {}
+      },
       "transform": {
         "translate": {
-          "x": -236.80399169921873,
-          "y": -142.25298767089845
+          "x": -235.4628049067246,
+          "y": -144.2600472632303
+        },
+        "scale": 1.5
+      },
+      "timeline": {
+        "isEditorActive": false,
+        "position": 0,
+        "secondToPx": 200,
+        "scrollLeft": 0
+      }
+    },
+    "[wavelet-mini-screens.eez-project]:/userPages/7[flow-state]": {
+      "selectionFront": {},
+      "selectionBack": {
+        "0": {
+          "0": {}
+        }
+      },
+      "transform": {
+        "translate": {
+          "x": -262.53363037109375,
+          "y": -146.29067993164062
+        },
+        "scale": 1.5
+      },
+      "timeline": {
+        "isEditorActive": false,
+        "position": 0,
+        "secondToPx": 200,
+        "scrollLeft": 0
+      }
+    },
+    "[wavelet-mini-screens.eez-project]:/userPages/8[flow-state]": {
+      "selectionFront": {},
+      "selectionBack": {
+        "0": {
+          "0": {
+            "$selected": true
+          }
+        }
+      },
+      "transform": {
+        "translate": {
+          "x": -160,
+          "y": -120
+        },
+        "scale": 1.5
+      },
+      "timeline": {
+        "isEditorActive": false,
+        "position": 0,
+        "secondToPx": 200,
+        "scrollLeft": 0
+      }
+    },
+    "[wavelet-mini-screens.eez-project]:/userPages/9[flow-state]": {
+      "selectionFront": {},
+      "selectionBack": {
+        "0": {}
+      },
+      "transform": {
+        "translate": {
+          "x": -254.646484375,
+          "y": -152.4251708984375
         },
         "scale": 1.75
       },
@@ -1297,7 +1370,15 @@
   "lvglState": "DEFAULT",
   "lvglExpandedPropertiesGroup": [
     "BACKGROUND",
-    "POSITION AND SIZE"
+    "POSITION AND SIZE",
+    "TEXT",
+    "ARC",
+    "LAYOUT",
+    "MISCELLANEOUS",
+    "LINE",
+    "OUTLINE",
+    "BORDER",
+    "MARGIN"
   ],
   "showInactiveFlowsInDebugger": true,
   "globalFlowZoom": true,
