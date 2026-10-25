@@ -193,7 +193,7 @@ pio run -t upload -e mini
 - [x] Companion app pairing
 - [x] Wi-Fi provisioning
 - [ ] Clock faces
-- [ ] Spotify interface
+- [x] Spotify interface
 - [ ] Battery management
 - [ ] Settings pages
 
