@@ -43,3 +43,5 @@ void saveDeviceName(String name);
 void saveSetupComplete();
 
 void processBleSetup();
+void setBleControlEnabled(bool enabled);
+bool isBleControlEnabled();

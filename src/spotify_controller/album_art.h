@@ -4,3 +4,6 @@
 #include <ArduinoJson.h>
 
 void checkAndCacheAlbumArt(const String &albumId, JsonDocument &reply);
+void albumArtSetEnabled(bool enabled);
+void albumArtProcessUi();
+bool albumArtIsBusy();

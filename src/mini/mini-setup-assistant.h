@@ -31,3 +31,4 @@ void initializeWiFi();
 void startSpotify();
 void startFeatures();
 void handleSpotifyLoop();
+void requestSpotifyStart();

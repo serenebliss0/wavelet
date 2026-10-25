@@ -12,6 +12,7 @@ extern const lv_font_t ui_font_nunito_18_bold;
 extern const lv_font_t ui_font_inter_10;
 extern const lv_font_t ui_font_inter_7;
 extern const lv_font_t ui_font_font_icons;
+extern const lv_font_t ui_font_large_nunito_bold_114;
 
 #ifndef EXT_FONT_DESC_T
 #define EXT_FONT_DESC_T

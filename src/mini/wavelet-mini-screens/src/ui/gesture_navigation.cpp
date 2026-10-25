@@ -16,10 +16,17 @@ static void enable_gesture_bubbling(lv_obj_t *parent) {
 }
 
 static ScreensEnum quickSettingsReturnScreen = SCREEN_ID_DEFAULT_CLOCK;
+static bool alwaysOnReturnHandlerAdded = false;
+
+static void alwaysOnTap(lv_event_t *event) {
+    if (lv_event_get_code(event) == LV_EVENT_CLICKED) {
+        eez_flow_set_screen(SCREEN_ID_DEFAULT_CLOCK, LV_SCR_LOAD_ANIM_FADE_IN, 180, 0);
+    }
+}
 
 static ScreensEnum currentScreenId() {
     lv_obj_t *active = lv_scr_act();
-    if (active == objects.volume_pane) return SCREEN_ID_VOLUME_PANE;
+    // if (active == objects.volume_pane) return SCREEN_ID_VOLUME_PANE;
     if (active == objects.media_pane) return SCREEN_ID_MEDIA_PANE;
     if (active == objects.quick_settings) return SCREEN_ID_QUICK_SETTINGS;
     if (active == objects.always_on_clock) return SCREEN_ID_ALWAYS_ON_CLOCK;
@@ -29,7 +36,7 @@ static ScreensEnum currentScreenId() {
 static ScreensEnum currentPaneId(ScreensEnum current) {
     if (current == SCREEN_ID_QUICK_SETTINGS) return quickSettingsReturnScreen;
     if (current == SCREEN_ID_ALWAYS_ON_CLOCK) return SCREEN_ID_DEFAULT_CLOCK;
-    if (current == SCREEN_ID_VOLUME_PANE || current == SCREEN_ID_MEDIA_PANE) return current;
+    // if (current == SCREEN_ID_VOLUME_PANE || current == SCREEN_ID_MEDIA_PANE) return current;
     return SCREEN_ID_DEFAULT_CLOCK;
 }
 
@@ -46,11 +53,11 @@ static void navigatePane(bool next) {
     // Three panes in order: Volume, Clock, Music. The ends are intentional;
     // swiping back from either end always returns to its neighboring pane.
     if (next) {
-        if (pane == SCREEN_ID_VOLUME_PANE) destination = SCREEN_ID_DEFAULT_CLOCK;
-        else if (pane == SCREEN_ID_DEFAULT_CLOCK) destination = SCREEN_ID_MEDIA_PANE;
+        // if (pane == SCREEN_ID_VOLUME_PANE) destination = SCREEN_ID_DEFAULT_CLOCK;
+        if (pane == SCREEN_ID_DEFAULT_CLOCK) destination = SCREEN_ID_MEDIA_PANE;
     } else {
         if (pane == SCREEN_ID_MEDIA_PANE) destination = SCREEN_ID_DEFAULT_CLOCK;
-        else if (pane == SCREEN_ID_DEFAULT_CLOCK) destination = SCREEN_ID_VOLUME_PANE;
+        // else if (pane == SCREEN_ID_DEFAULT_CLOCK) destination = SCREEN_ID_VOLUME_PANE;
     }
 
     if (currentScreenId() == SCREEN_ID_QUICK_SETTINGS) {
@@ -99,7 +106,7 @@ static void screen_gesture_cb(lv_event_t *event) {
 extern "C" void gesture_navigation_init(void) {
     lv_obj_t *screens[] = {
         objects.default_clock,
-        objects.volume_pane,
+        // objects.volume_pane,
         objects.media_pane,
         objects.quick_settings,
         objects.always_on_clock,
@@ -111,6 +118,10 @@ extern "C" void gesture_navigation_init(void) {
         lv_obj_clear_flag(screen, LV_OBJ_FLAG_SCROLLABLE);
         enable_gesture_bubbling(screen);
         lv_obj_add_event_cb(screen, screen_gesture_cb, LV_EVENT_GESTURE, NULL);
+    }
+    if (objects.always_on_clock && !alwaysOnReturnHandlerAdded) {
+        lv_obj_add_event_cb(objects.always_on_clock, alwaysOnTap, LV_EVENT_CLICKED, NULL);
+        alwaysOnReturnHandlerAdded = true;
     }
 }
 
@@ -138,12 +149,24 @@ extern "C" void mini_clock_update(void) {
     strftime(day, sizeof(day), "%a", &localTime);
     strftime(date, sizeof(date), "%d %b", &localTime);
 
-    // These are the two time labels and the day/date labels created in
-    // create_screen_default_clock(), in order.
-    lv_obj_t *hourLabel = lv_obj_get_child(objects.default_clock, 5);
-    lv_obj_t *minuteLabel = lv_obj_get_child(objects.default_clock, 6);
-    lv_obj_t *dayLabel = lv_obj_get_child(objects.default_clock, 8);
-    lv_obj_t *dateLabel = lv_obj_get_child(objects.default_clock, 9);
+    // Use the generated object handles. Child positions change whenever the
+    // screen layout is regenerated and include non-label objects.
+    lv_obj_t *hourLabel = objects.obj24;
+    lv_obj_t *minuteLabel = objects.obj25;
+    lv_obj_t *dayLabel = objects.obj26;
+    lv_obj_t *dateLabel = objects.obj27;
+    if (objects.always_on_hour) lv_label_set_text(objects.always_on_hour, hour);
+    if (objects.always_on_minute) lv_label_set_text(objects.always_on_minute, minute);
+    if (objects.always_on_day) {
+        char dayOfMonth[4];
+        strftime(dayOfMonth, sizeof(dayOfMonth), "%d", &localTime);
+        lv_label_set_text(objects.always_on_day, dayOfMonth);
+    }
+
+    // Enter the low detail clock after a minute without touch while on home.
+    if (lv_scr_act() == objects.default_clock && lv_disp_get_inactive_time(NULL) >= 60000) {
+        eez_flow_set_screen(SCREEN_ID_ALWAYS_ON_CLOCK, LV_SCR_LOAD_ANIM_FADE_IN, 220, 0);
+    }
 
     if (strcmp(hour, lastHour) != 0) {
         lv_label_set_text(hourLabel, hour);

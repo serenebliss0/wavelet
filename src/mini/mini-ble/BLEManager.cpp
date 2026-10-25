@@ -39,6 +39,8 @@ BLECharacteristic* pSpotifyToken = nullptr;
 static esp_ble_adv_params_t reconnectAdvertisingParams = {};
 
 bool deviceConnected = false;
+static bool bleControlEnabled = true;
+static uint16_t bleConnectionId = 0;
 // bool isSetupComplete = false;
 
 bool wifiConnectionRequested = false;
@@ -223,6 +225,11 @@ void syncTimeWithNTP() {
 //Handles a bunch of BLE Callbacks
     class ServerCallbacks : public BLEServerCallbacks {
 
+    void onConnect(BLEServer* pServer, esp_ble_gatts_cb_param_t *param) override {
+        bleConnectionId = param->connect.conn_id;
+        onConnect(pServer);
+    }
+
     void onConnect(BLEServer* pServer) override {
 
         deviceConnected = true;
@@ -243,6 +250,7 @@ void syncTimeWithNTP() {
         // The payload was configured once in initBLE(). Restart only the
         // controller advertising state; BLEAdvertising::start() reconfigures
         // advertising + scan response and allocates again on every reconnect.
+        if (!bleControlEnabled) return;
         esp_err_t result = esp_ble_gap_start_advertising(&reconnectAdvertisingParams);
         if (result != ESP_OK) {
             Serial.printf("[BLE] Advertising restart failed: %d\n", result);
@@ -503,13 +511,29 @@ void initBLE(String deviceModel, String deviceColor) {
     reconnectAdvertisingParams.channel_map = ADV_CHNL_ALL;
     reconnectAdvertisingParams.adv_filter_policy = ADV_FILTER_ALLOW_SCAN_ANY_CON_ANY;
 
-    BLEDevice::startAdvertising();
+    bleControlEnabled = prefs.getBool("mini_ble_on", true);
+    if (bleControlEnabled) BLEDevice::startAdvertising();
 
     Serial.printf(
         "[BLE] Advertising as %s\n",
         advertisingName.c_str()
     );
 }
+
+void setBleControlEnabled(bool enabled) {
+    bleControlEnabled = enabled;
+    BLEAdvertising *advertising = BLEDevice::getAdvertising();
+    if (enabled) {
+        const esp_err_t result = esp_ble_gap_start_advertising(&reconnectAdvertisingParams);
+        Serial.printf("[BLE] Control enabled; advertising start result=%d\n", result);
+    } else {
+        if (advertising) advertising->stop();
+        if (deviceConnected && pServer) pServer->disconnect(bleConnectionId);
+        Serial.println("[BLE] Control disabled; advertising stopped");
+    }
+}
+
+bool isBleControlEnabled() { return bleControlEnabled; }
 
 //starts setup mode
 void beginSetupMode(
@@ -529,6 +553,12 @@ void beginSetupMode(
 }
 
 void processBleSetup() {
+
+    if (!bleControlEnabled) {
+        pendingControlCommand = "";
+        wifiConnectionRequested = false;
+        return;
+    }
 
     if (!pendingControlCommand.isEmpty()) {
         String command = pendingControlCommand;

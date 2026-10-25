@@ -12,6 +12,10 @@ extern Spotify sp;
 extern String lastTrack;
 extern String lastArtist;
 extern bool lastPlaying;
+extern int lastProgressMs;
+extern int lastDurationMs;
+extern int lastSpotifyVolume;
+extern String lastPlayingDevice;
 
 void initializeSpotify();
 
@@ -31,6 +35,8 @@ void playPreviousSong();
 void setVolume(int volume_level);
 
 void seekToPosition(int position_level);
+void setSpotifyFeatureEnabled(bool enabled);
+void updateSpotifyMediaUi();
 
 void enableShuffling();
 

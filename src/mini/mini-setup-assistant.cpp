@@ -4,6 +4,7 @@
 #include "mini-ble/BLEManager.h"
 #include "mini/audio/volume_control.h"
 #include "mini/wavelet-mini-screens/src/ui/gesture_navigation.h"
+#include "mini/ui/mini_ui_controls.h"
 
 extern Preferences prefs;
 
@@ -101,6 +102,7 @@ void initializeLVGL() {
     ui_init();
     miniVolumeInitialize();
     miniVolumeBindUi();
+    miniUiControlsInitialize();
     gesture_navigation_init();
     lv_timer_create(
         [](lv_timer_t *) { mini_clock_update(); },
@@ -206,6 +208,11 @@ void playBootChime(){
 }
 
 void initializeWiFi(){
+    if (!prefs.getBool("mini_wifi_on", true)) {
+        WiFi.disconnect(true, false);
+        WiFi.mode(WIFI_OFF);
+        return;
+    }
     if (hasStoredWifiCredentials()) {
         beginWifiManager();
         while (!isWifiManagerDone()) {
@@ -216,7 +223,7 @@ void initializeWiFi(){
 }
 
 void startSpotify(){
-    if (WiFi.status() == WL_CONNECTED) {
+    if (WiFi.status() == WL_CONNECTED && !sp.is_auth()) {
     //Gate features requiring wifi
         String provisionedToken = prefs.getString("spotify_refresh", "");
         if (!provisionedToken.isEmpty()) sp.set_refresh_token(provisionedToken.c_str());
@@ -225,13 +232,29 @@ void startSpotify(){
     }
 }
 
+void requestSpotifyStart() {
+    static bool startPending = false;
+    if (!setupDone || !miniSpotifyFeaturesEnabled() || WiFi.status() != WL_CONNECTED || sp.is_auth() || startPending) return;
+    startPending = true;
+    const BaseType_t created = xTaskCreatePinnedToCore(
+        [](void *context) {
+            bool *pending = static_cast<bool *>(context);
+            startSpotify();
+            *pending = false;
+            vTaskDelete(nullptr);
+        },
+        "spotifyAuth", 8192, &startPending, 1, nullptr, 1
+    );
+    if (created != pdPASS) startPending = false;
+}
+
 void startFeatures(){
     Battery::begin();
     initializeSD();
     initializeAudio();
     playBootChime();
     initializeWiFi();
-    if(setupDone){
+    if(setupDone && miniSpotifyFeaturesEnabled()){
         startSpotify();
     }
 }
@@ -239,8 +262,11 @@ void startFeatures(){
 void handleSpotifyLoop(){
     static String lastDisplayedTitle;
 
-    if(setupDone){
-        if(WiFi.status() == WL_CONNECTED){
+    miniUiControlsUpdate();
+
+    if(setupDone && miniSpotifyFeaturesEnabled()){
+        requestSpotifyStart();
+        if(WiFi.status() == WL_CONNECTED && sp.is_auth()){
             String currentlyPlaying = updateSpotify();
 
             if (currentlyPlaying != lastDisplayedTitle) {
@@ -251,6 +277,9 @@ void handleSpotifyLoop(){
                 lastDisplayedTitle = currentlyPlaying;
             }
         }
+    } else if (objects.currently_playing && lastDisplayedTitle != "Spotify Off") {
+        lv_label_set_text(objects.currently_playing, "Spotify Off");
+        lastDisplayedTitle = "Spotify Off";
     }
 }
 
