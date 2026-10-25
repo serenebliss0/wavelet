@@ -1,6 +1,6 @@
 #include "images.h"
 
-const ext_img_desc_t images[10] = {
+const ext_img_desc_t images[11] = {
     { "wavelet_logo", &img_wavelet_logo },
     { "mini-manual-code-box-initialpair", &img_mini_manual_code_box_initialpair },
     { "onboarding-tutorial-1-swipedown", &img_onboarding_tutorial_1_swipedown },
@@ -11,4 +11,5 @@ const ext_img_desc_t images[10] = {
     { "onboarding-tutorial-3-swipeup", &img_onboarding_tutorial_3_swipeup },
     { "Statusbar Volume", &img_statusbar_volume },
     { "default_album_cover", &img_default_album_cover },
+    { "heart", &img_heart },
 };

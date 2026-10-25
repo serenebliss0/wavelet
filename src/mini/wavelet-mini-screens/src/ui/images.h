@@ -17,6 +17,7 @@ extern const lv_img_dsc_t img_3_step_guide_phase_3;
 extern const lv_img_dsc_t img_onboarding_tutorial_3_swipeup;
 extern const lv_img_dsc_t img_statusbar_volume;
 extern const lv_img_dsc_t img_default_album_cover;
+extern const lv_img_dsc_t img_heart;
 
 #ifndef EXT_IMG_DESC_T
 #define EXT_IMG_DESC_T
@@ -26,7 +27,7 @@ typedef struct _ext_img_desc_t {
 } ext_img_desc_t;
 #endif
 
-extern const ext_img_desc_t images[10];
+extern const ext_img_desc_t images[11];
 
 #ifdef __cplusplus
 }

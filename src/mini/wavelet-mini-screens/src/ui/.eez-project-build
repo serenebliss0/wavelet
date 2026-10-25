@@ -23,6 +23,7 @@
     "ui_image_3_step_guide_phase_2.c",
     "ui_image_3_step_guide_phase_3.c",
     "ui_image_default_album_cover.c",
+    "ui_image_heart.c",
     "ui_image_mini_manual_code_box_initialpair.c",
     "ui_image_onboarding_tutorial_1_swipedown.c",
     "ui_image_onboarding_tutorial_2_leftright.c",

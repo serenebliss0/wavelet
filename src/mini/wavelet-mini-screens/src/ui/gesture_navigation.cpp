@@ -149,12 +149,12 @@ extern "C" void mini_clock_update(void) {
     strftime(day, sizeof(day), "%a", &localTime);
     strftime(date, sizeof(date), "%d %b", &localTime);
 
-    // Use the generated object handles. Child positions change whenever the
-    // screen layout is regenerated and include non-label objects.
-    lv_obj_t *hourLabel = objects.obj24;
-    lv_obj_t *minuteLabel = objects.obj25;
-    lv_obj_t *dayLabel = objects.obj26;
-    lv_obj_t *dateLabel = objects.obj27;
+    // These are the current DefaultClock labels in the generated EEZ UI.
+    // Check their types as well: EEZ can renumber objN handles after a UI edit.
+    lv_obj_t *hourLabel = objects.obj20;
+    lv_obj_t *minuteLabel = objects.obj21;
+    lv_obj_t *dayLabel = objects.obj22;
+    lv_obj_t *dateLabel = objects.obj23;
     if (objects.always_on_hour) lv_label_set_text(objects.always_on_hour, hour);
     if (objects.always_on_minute) lv_label_set_text(objects.always_on_minute, minute);
     if (objects.always_on_day) {
@@ -169,19 +169,19 @@ extern "C" void mini_clock_update(void) {
     }
 
     if (strcmp(hour, lastHour) != 0) {
-        lv_label_set_text(hourLabel, hour);
+        if (hourLabel && lv_obj_check_type(hourLabel, &lv_label_class)) lv_label_set_text(hourLabel, hour);
         strcpy(lastHour, hour);
     }
     if (strcmp(minute, lastMinute) != 0) {
-        lv_label_set_text(minuteLabel, minute);
+        if (minuteLabel && lv_obj_check_type(minuteLabel, &lv_label_class)) lv_label_set_text(minuteLabel, minute);
         strcpy(lastMinute, minute);
     }
     if (strcmp(day, lastDay) != 0) {
-        lv_label_set_text(dayLabel, day);
+        if (dayLabel && lv_obj_check_type(dayLabel, &lv_label_class)) lv_label_set_text(dayLabel, day);
         strcpy(lastDay, day);
     }
     if (strcmp(date, lastDate) != 0) {
-        lv_label_set_text(dateLabel, date);
+        if (dateLabel && lv_obj_check_type(dateLabel, &lv_label_class)) lv_label_set_text(dateLabel, date);
         strcpy(lastDate, date);
     }
 }

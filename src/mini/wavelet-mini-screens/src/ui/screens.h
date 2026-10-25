@@ -11,44 +11,45 @@ extern "C" {
 
 enum ScreensEnum {
     _SCREEN_ID_FIRST = 1,
-    SCREEN_ID_QUICK_SETTINGS = 1,
-    SCREEN_ID_BOOT_SPLASH = 2,
-    SCREEN_ID_INITIAL_QR_PAGE = 3,
-    SCREEN_ID_ONBOARDING1 = 4,
-    SCREEN_ID_ONBOARDING2 = 5,
-    SCREEN_ID_ONBOARDING3 = 6,
-    SCREEN_ID_DEFAULT_CLOCK = 7,
+    SCREEN_ID_BOOT_SPLASH = 1,
+    SCREEN_ID_INITIAL_QR_PAGE = 2,
+    SCREEN_ID_ONBOARDING1 = 3,
+    SCREEN_ID_ONBOARDING2 = 4,
+    SCREEN_ID_ONBOARDING3 = 5,
+    SCREEN_ID_DEFAULT_CLOCK = 6,
+    SCREEN_ID_QUICK_SETTINGS = 7,
     SCREEN_ID_MEDIA_PANE = 8,
     SCREEN_ID_ALWAYS_ON_CLOCK = 9,
     SCREEN_ID_SETTINGS_PAGE = 10,
-    _SCREEN_ID_LAST = 10
+    SCREEN_ID_SETTINGS_CONNECTIVITY = 11,
+    SCREEN_ID_ABOUT_WAVELET_1 = 12,
+    SCREEN_ID_ABOUT_WAVELET_2 = 13,
+    SCREEN_ID_ABOUT_WAVELET_3 = 14,
+    SCREEN_ID_SECRET_PAGE = 15,
+    _SCREEN_ID_LAST = 15
 };
 
 typedef struct _objects_t {
-    lv_obj_t *quick_settings;
     lv_obj_t *boot_splash;
     lv_obj_t *initial_qr_page;
     lv_obj_t *onboarding1;
     lv_obj_t *onboarding2;
     lv_obj_t *onboarding3;
     lv_obj_t *default_clock;
+    lv_obj_t *quick_settings;
     lv_obj_t *media_pane;
     lv_obj_t *always_on_clock;
     lv_obj_t *settings_page;
-    lv_obj_t *wifi_button;
-    lv_obj_t *bluetooth_button;
-    lv_obj_t *spotify_button;
-    lv_obj_t *dnd_button;
-    lv_obj_t *brightness;
-    lv_obj_t *volume_slider;
-    lv_obj_t *gesture_hint_quick_settings;
-    lv_obj_t *open_settings;
+    lv_obj_t *settings_connectivity;
+    lv_obj_t *about_wavelet_1;
+    lv_obj_t *about_wavelet_2;
+    lv_obj_t *about_wavelet_3;
+    lv_obj_t *secret_page;
+    lv_obj_t *wavelet_log;
     lv_obj_t *obj0;
-    lv_obj_t *power_button;
     lv_obj_t *obj1;
     lv_obj_t *obj2;
     lv_obj_t *obj3;
-    lv_obj_t *wavelet_log;
     lv_obj_t *obj4;
     lv_obj_t *obj5;
     lv_obj_t *obj6;
@@ -65,20 +66,29 @@ typedef struct _objects_t {
     lv_obj_t *obj17;
     lv_obj_t *obj18;
     lv_obj_t *obj19;
+    lv_obj_t *wifi_status;
     lv_obj_t *obj20;
     lv_obj_t *obj21;
     lv_obj_t *obj22;
     lv_obj_t *obj23;
-    lv_obj_t *wifi_status;
     lv_obj_t *obj24;
-    lv_obj_t *obj25;
-    lv_obj_t *obj26;
-    lv_obj_t *obj27;
-    lv_obj_t *obj28;
     lv_obj_t *currently_playing;
     lv_obj_t *battery_icon;
     lv_obj_t *battery_percentage;
     lv_obj_t *wallpaper_image;
+    lv_obj_t *obj25;
+    lv_obj_t *obj26;
+    lv_obj_t *wifi_button;
+    lv_obj_t *bluetooth_button;
+    lv_obj_t *spotify_button;
+    lv_obj_t *dnd_button;
+    lv_obj_t *brightness;
+    lv_obj_t *volume_slider;
+    lv_obj_t *gesture_hint_quick_settings;
+    lv_obj_t *open_settings;
+    lv_obj_t *obj27;
+    lv_obj_t *power_button;
+    lv_obj_t *obj28;
     lv_obj_t *obj29;
     lv_obj_t *obj30;
     lv_obj_t *obj31;
@@ -103,15 +113,73 @@ typedef struct _objects_t {
     lv_obj_t *always_on_minute;
     lv_obj_t *always_on_day;
     lv_obj_t *obj42;
-    lv_obj_t *settings_back_button;
     lv_obj_t *obj43;
     lv_obj_t *obj44;
+    lv_obj_t *settings_back_button;
+    lv_obj_t *obj45;
+    lv_obj_t *obj46;
+    lv_obj_t *obj47;
+    lv_obj_t *obj48;
+    lv_obj_t *obj49;
+    lv_obj_t *obj50;
+    lv_obj_t *obj51;
+    lv_obj_t *obj52;
+    lv_obj_t *obj53;
+    lv_obj_t *obj54;
+    lv_obj_t *obj55;
+    lv_obj_t *obj56;
+    lv_obj_t *obj57;
+    lv_obj_t *obj58;
+    lv_obj_t *obj59;
+    lv_obj_t *obj60;
+    lv_obj_t *obj61;
+    lv_obj_t *obj62;
+    lv_obj_t *obj63;
+    lv_obj_t *obj64;
+    lv_obj_t *obj65;
+    lv_obj_t *obj66;
+    lv_obj_t *obj67;
+    lv_obj_t *wavelet_log_1;
+    lv_obj_t *settings_back_button_1;
+    lv_obj_t *obj68;
+    lv_obj_t *obj69;
+    lv_obj_t *obj70;
+    lv_obj_t *obj71;
+    lv_obj_t *obj72;
+    lv_obj_t *uptime_duration;
+    lv_obj_t *obj73;
+    lv_obj_t *settings_back_button_4;
+    lv_obj_t *obj74;
+    lv_obj_t *wavelet_log_2;
+    lv_obj_t *settings_back_button_2;
+    lv_obj_t *obj75;
+    lv_obj_t *ip_adress;
+    lv_obj_t *obj76;
+    lv_obj_t *wifi_mac_address;
+    lv_obj_t *obj77;
+    lv_obj_t *bluetooth_address;
+    lv_obj_t *obj78;
+    lv_obj_t *settings_back_button_5;
+    lv_obj_t *obj79;
+    lv_obj_t *settings_back_button_6;
+    lv_obj_t *obj80;
+    lv_obj_t *wavelet_log_3;
+    lv_obj_t *settings_back_button_3;
+    lv_obj_t *obj81;
+    lv_obj_t *settings_back_button_7;
+    lv_obj_t *obj82;
+    lv_obj_t *obj83;
+    lv_obj_t *obj84;
+    lv_obj_t *obj85;
+    lv_obj_t *obj86;
+    lv_obj_t *obj87;
+    lv_obj_t *obj88;
+    lv_obj_t *obj89;
+    lv_obj_t *obj90;
+    lv_obj_t *obj91;
 } objects_t;
 
 extern objects_t objects;
-
-void create_screen_quick_settings();
-void tick_screen_quick_settings();
 
 void create_screen_boot_splash();
 void tick_screen_boot_splash();
@@ -131,6 +199,9 @@ void tick_screen_onboarding3();
 void create_screen_default_clock();
 void tick_screen_default_clock();
 
+void create_screen_quick_settings();
+void tick_screen_quick_settings();
+
 void create_screen_media_pane();
 void tick_screen_media_pane();
 
@@ -139,6 +210,21 @@ void tick_screen_always_on_clock();
 
 void create_screen_settings_page();
 void tick_screen_settings_page();
+
+void create_screen_settings_connectivity();
+void tick_screen_settings_connectivity();
+
+void create_screen_about_wavelet_1();
+void tick_screen_about_wavelet_1();
+
+void create_screen_about_wavelet_2();
+void tick_screen_about_wavelet_2();
+
+void create_screen_about_wavelet_3();
+void tick_screen_about_wavelet_3();
+
+void create_screen_secret_page();
+void tick_screen_secret_page();
 
 void tick_screen_by_id(enum ScreensEnum screenId);
 void tick_screen(int screen_index);

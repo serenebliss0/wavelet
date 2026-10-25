@@ -8,6 +8,10 @@
 
 extern Preferences prefs;
 
+namespace {
+bool spotifyClientInitialized = false;
+}
+
 //Setting up display for MINI
 // TODO: Give each model its own module and free up main.cpp
 
@@ -171,13 +175,14 @@ void startOrCheckOnboarding() {
 
         // Prepare pairing screen while splash is showing
         lv_qrcode_update(
-            objects.obj0,
+            objects.obj4,
             payload.c_str(),
             payload.length()
         );
 
+
         lv_label_set_text(
-            objects.obj6,
+            objects.obj10,
             token.c_str()
         );
     } 
@@ -223,18 +228,20 @@ void initializeWiFi(){
 }
 
 void startSpotify(){
-    if (WiFi.status() == WL_CONNECTED && !sp.is_auth()) {
-    //Gate features requiring wifi
+    if (WiFi.status() == WL_CONNECTED && !spotifyClientInitialized) {
+        // is_auth() only tells us that refresh credentials exist. It does not
+        // initialize the TLS client or obtain an access token; begin() does that.
         String provisionedToken = prefs.getString("spotify_refresh", "");
         if (!provisionedToken.isEmpty()) sp.set_refresh_token(provisionedToken.c_str());
         initializeSpotify();
         authenticateSpotify();
+        spotifyClientInitialized = true;
     }
 }
 
 void requestSpotifyStart() {
     static bool startPending = false;
-    if (!setupDone || !miniSpotifyFeaturesEnabled() || WiFi.status() != WL_CONNECTED || sp.is_auth() || startPending) return;
+    if (!setupDone || !miniSpotifyFeaturesEnabled() || WiFi.status() != WL_CONNECTED || spotifyClientInitialized || startPending) return;
     startPending = true;
     const BaseType_t created = xTaskCreatePinnedToCore(
         [](void *context) {

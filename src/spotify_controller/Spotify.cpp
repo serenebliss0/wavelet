@@ -118,7 +118,9 @@ String getCurrentlyPlaying() {
     filter["device"]["name"] = true;
     filter["device"]["volume_percent"] = true;
 
-    response res = sp.get_currently_playing_track(filter);
+    // The full playback-state endpoint includes both the current item and the
+    // active device fields. The currently-playing endpoint may omit device.
+    response res = sp.get_playback_state(filter);
 
     if (res.status_code == -1) {
         Serial.println("[SPOTIFY] Request failed; keeping WiFi connected for retry");
@@ -137,8 +139,12 @@ String getCurrentlyPlaying() {
     bool playing = res.reply["is_playing"] | false;
     lastProgressMs = res.reply["progress_ms"] | 0;
     lastDurationMs = res.reply["item"]["duration_ms"] | 0;
-    lastPlayingDevice = res.reply["device"]["name"].as<String>();
-    lastSpotifyVolume = res.reply["device"]["volume_percent"] | 0;
+    JsonVariantConst deviceName = res.reply["device"]["name"];
+    lastPlayingDevice = deviceName.is<const char *>() ? deviceName.as<String>() : "";
+    JsonVariantConst spotifyVolume = res.reply["device"]["volume_percent"];
+    if (spotifyVolume.is<int>()) {
+        lastSpotifyVolume = constrain(spotifyVolume.as<int>(), 0, 100);
+    }
     if (!playing || res.reply["item"].isNull()) {
         lastPlaying = false;
         lastTrack = "";
