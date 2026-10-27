@@ -175,14 +175,16 @@ void startOrCheckOnboarding() {
 
         // Prepare pairing screen while splash is showing
         lv_qrcode_update(
-            objects.obj4,
+            // objects.obj4,
+            objects.qr_token,
             payload.c_str(),
             payload.length()
         );
 
 
         lv_label_set_text(
-            objects.obj10,
+            // objects.obj10,
+            objects.generated_token_label,
             token.c_str()
         );
     } 
@@ -264,6 +266,7 @@ void startFeatures(){
     if(setupDone && miniSpotifyFeaturesEnabled()){
         startSpotify();
     }
+    updateAboutPage();
 }
 
 void handleSpotifyLoop(){

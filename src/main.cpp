@@ -52,7 +52,7 @@ Preferences prefs; //Global preferences object
 // comment this line to disable debug
 #define DEBUG
 
-#define MINI_FIRMWARE_VERSION "0.3.0"
+#define MINI_FIRMWARE_VERSION "0.5.1"
 #define REGULAR_FIRMWARE_VERSION "0.1.0"
 #define MAX_FIRMWARE_VERSION "0.0.0"
 

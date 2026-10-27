@@ -32,3 +32,4 @@ void startSpotify();
 void startFeatures();
 void handleSpotifyLoop();
 void requestSpotifyStart();
+void updateAboutPage();

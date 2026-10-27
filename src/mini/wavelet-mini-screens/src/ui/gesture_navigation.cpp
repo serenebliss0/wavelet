@@ -81,7 +81,7 @@ static void screen_gesture_cb(lv_event_t *event) {
     switch (lv_indev_get_gesture_dir(input)) {
     case LV_DIR_TOP: // Swipe up enters Always On from the clock, or closes Quick Settings.
         if (current == SCREEN_ID_QUICK_SETTINGS) {
-            navigateTo(quickSettingsReturnScreen, LV_SCR_LOAD_ANIM_MOVE_TOP);
+            navigateTo(quickSettingsReturnScreen, LV_SCR_LOAD_ANIM_MOVE_BOTTOM);
         } else if (current == SCREEN_ID_DEFAULT_CLOCK) {
             navigateTo(SCREEN_ID_ALWAYS_ON_CLOCK, LV_SCR_LOAD_ANIM_MOVE_BOTTOM);
         }
@@ -151,10 +151,10 @@ extern "C" void mini_clock_update(void) {
 
     // These are the current DefaultClock labels in the generated EEZ UI.
     // Check their types as well: EEZ can renumber objN handles after a UI edit.
-    lv_obj_t *hourLabel = objects.obj20;
-    lv_obj_t *minuteLabel = objects.obj21;
-    lv_obj_t *dayLabel = objects.obj22;
-    lv_obj_t *dateLabel = objects.obj23;
+    lv_obj_t *hourLabel = objects.hour_default_clock;
+    lv_obj_t *minuteLabel = objects.minute_default_clock;
+    lv_obj_t *dayLabel = objects.day_default_clock;
+    lv_obj_t *dateLabel = objects.date_default_clock;
     if (objects.always_on_hour) lv_label_set_text(objects.always_on_hour, hour);
     if (objects.always_on_minute) lv_label_set_text(objects.always_on_minute, minute);
     if (objects.always_on_day) {

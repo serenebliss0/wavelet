@@ -300,11 +300,14 @@ void updateSpotifyMediaUi() {
     eez::flow::setGlobalVariable(FLOW_GLOBAL_VARIABLE_SPOTIFY_PLAYING_DEVICE, eez::Value(playingDevice));
     if (objects.song_title) lv_label_set_text(objects.song_title, lastTrack.isEmpty() ? "Nothing Playing" : lastTrack.c_str());
     if (objects.artist_name) lv_label_set_text(objects.artist_name, lastArtist.c_str());
-    if (objects.obj38) {
+    if (objects.playing_on) {
         String device = lastPlayingDevice.isEmpty() ? "" : lastPlayingDevice;
-        lv_label_set_text(objects.obj38, device.c_str());
+        lv_label_set_text(objects.playing_on, device.c_str());
     }
-    if (objects.obj33) lv_label_set_text(objects.obj33, lastPlaying ? LV_SYMBOL_PAUSE : LV_SYMBOL_PLAY);
+
+    //removed this part
+    //check later
+    // if (objects.obj33) lv_label_set_text(objects.obj33, lastPlaying ? LV_SYMBOL_PAUSE : LV_SYMBOL_PLAY);
     if (objects.media_bar && displayedProgress != progressSeconds) {
         lv_slider_set_range(objects.media_bar, 0, max(1, durationSeconds));
         lv_slider_set_value(objects.media_bar, progressSeconds, LV_ANIM_OFF);

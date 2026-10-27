@@ -38,15 +38,15 @@ void seekToPosition(int position_level);
 void setSpotifyFeatureEnabled(bool enabled);
 void updateSpotifyMediaUi();
 
-void enableShuffling();
+void enableShuffle();
 
-void disableShuffling();
+void disableShuffle();
 
-void disableRepeat();
+void setRepeatOff();
 
-void enableRepeat();
+void setRepeatTrack();
 
-void repeatOne();
+void setRepeatContext();
 
 //spotify information
 void getAvailableDevices();

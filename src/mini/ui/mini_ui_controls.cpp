@@ -164,7 +164,81 @@ void miniUiControlsUpdate() {
     eez::flow::setGlobalVariable(FLOW_GLOBAL_VARIABLE_BATTERY_ICON, eez::Value(icon));
     eez::flow::setGlobalVariable(FLOW_GLOBAL_VARIABLE_IS_WIFI_CONNECTED, eez::Value(connected));
 
-    if (objects.wifi_status) lv_label_set_text(objects.wifi_status, connected ? "Connected" : "Disconnected");
+    //removed unnecessary change
+    // if (objects.wifi_status) lv_label_set_text(objects.wifi_status, connected ? "Connected" : "Disconnected");
 
     if (objects.media_bar && spotifyEnabled) updateSpotifyMediaUi();
+}
+
+bool shuffleEnabled = false;
+
+void toggleShuffle() {
+    if (shuffleEnabled) {
+        disableShuffle();
+        shuffleEnabled = false;
+    } else {
+        enableShuffle();
+        shuffleEnabled = true;
+    }
+}
+
+
+enum RepeatMode {
+    REPEAT_OFF,
+    REPEAT_ALL,
+    REPEAT_ONE
+};
+
+RepeatMode repeatMode = REPEAT_OFF;
+
+void toggleRepeat() {
+    switch (repeatMode) {
+        case REPEAT_OFF:
+            setRepeatOff();
+            repeatMode = REPEAT_ALL;
+            break;
+
+        case REPEAT_ALL:
+            setRepeatTrack();
+            repeatMode = REPEAT_ONE;
+            break;
+
+        case REPEAT_ONE:
+            setRepeatContext();
+            repeatMode = REPEAT_OFF;
+            break;
+    }
+}
+
+
+extern "C" void action_on_click_shuffle(lv_event_t *e) {
+    // TODO: Implement action on_click_shuffle here
+    toggleShuffle(); //make it sync with spotify
+}
+
+extern "C" void action_on_click_repeat(lv_event_t *e) {
+    toggleRepeat(); //make this also sync with spotify
+}
+
+void updateAboutPage(){
+    lv_label_set_text(
+        objects.ip_address,
+        (WiFi.localIP()).toString().c_str()
+    );
+    
+    lv_label_set_text(
+        objects.wifi_mac_address,
+        WiFi.macAddress().c_str()
+    );
+
+    lv_label_set_text(
+        objects.uptime_duration,
+        static_cast <String>(millis()).c_str()
+    );
+
+    //Set to device name for now
+    lv_label_set_text(
+        objects.bluetooth_address,
+        prefs.getString("device_name").c_str()
+    );
 }
